@@ -1,5 +1,5 @@
-# QMK Userspace
+# My QMK Userspace
 
-This is the QMK Userspace for the Bastard Keyboards keymaps.
+This is my QMK Userspace for the Bastard Charybdis MK2 4x6/Zsa Voyager+Navigator keymaps.
 
-You can read how to compile your own keymap on the official docs here: [https://docs.bastardkb.com/fw/compile-firmware.html](https://docs.bastardkb.com/fw/compile-firmware.html).
+[Bastard compile firmware guide](https://docs.bastardkb.com/fw/compile-firmware.html).

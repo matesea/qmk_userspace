@@ -1,0 +1,8 @@
+{
+  "modules": [
+    "getreuer/select_word"
+    // "getreuer/lumino",
+    // "dave-thompson/lumberjack",
+    // "getreuer/palettefx"
+  ]
+}
