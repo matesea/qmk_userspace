@@ -249,7 +249,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     // mouse keycodes and those often used together
     [EXT] = LAYOUT_LR(
-            AML_OFF, _______, _______, _______, _______, _______,
+            _______, _______, _______, _______, _______, _______,
             _______, _______, _______, _______, _______, _______,
             _______, _______, _______, _______, _______, _______,
             _______, _______, _______, _______, MS_BTN2, _______,
@@ -259,7 +259,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
-                     _______, _______
+                     AML_OFF, _______
             ),
 
     // shortcuts that can be done with one-hand
@@ -344,7 +344,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case HRM_M: case HRM_V:
             return TAPPING_TERM; /* 180ms */
     }
-    return TAPPING_TERM + 120; /* 300ms */
+    return TAPPING_TERM + 70; /* 250ms */
 }
 #endif /* TAPPING_TERM_PER_KEY */
 
@@ -497,7 +497,7 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              *      this meaningful value should be around 60ms for me
              */
             case HRM_D: case HRM_K: // ctrl
-                 return FLOW_TAP_TERM - 100; // 50ms
+                 return FLOW_TAP_TERM - 75; // 75ms
 
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
             case HRM_Z: case HRM_SLSH:      // LT(TMUX)
@@ -546,6 +546,7 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
         *remembered_mods &= MOD_MASK_SHIFT;
         break;
 
+      case MS_BTN1 ... MS_BTN2: // no need to remember any modifiers for mouse keys
       case LBRC_A ... RBRC_Z:
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
@@ -692,9 +693,6 @@ __attribute__((weak)) bool process_tap(keyrecord_t *record, uint16_t tap) {
     // tap
     if (record->event.pressed) {
         tap_code16_delay(tap, TAP_CODE_DELAY);
-#ifdef REPEAT_KEY_ENABLE
-        set_last_keycode(tap);
-#endif // REPEAT_KEY_ENABLE
      }
      return true;
 }
@@ -752,13 +750,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         wait_ms(TAP_CODE_DELAY);
         swapp_mod = 0;
     }
-    // automatically cancel oneshot shift when in other layer
+    // automatically cancel oneshot shift in typing layer
     if ((get_oneshot_mods() & MOD_MASK_SHIFT) && layer > QWERTY) {
         del_oneshot_mods(MOD_MASK_SHIFT);
     }
+#if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
     STATUS_LED_1(layer & (1 << 0));
     STATUS_LED_2(layer & (1 << 1));
     STATUS_LED_3(layer & (1 << 2));
+#endif
     return state;
 }
 
@@ -812,19 +812,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 
 #if defined(REPEAT_KEY_ENABLE)
-  switch (get_tap_keycode(keycode)) {
-      /* change repeat key as oneshot shift if following these keys */
-      case KC_ENT:
-      case KC_SPC:
-      case KC_TAB:
-      case APPPREV:
-      case APPNEXT:
-      case SWIME:
-          if (get_repeat_key_count() > 0) {
-              add_oneshot_mods(MOD_LSFT);
-              return false;
-          }
-          break;
+  if (get_repeat_key_count() > 0) {
+      switch (get_tap_keycode(keycode)) {
+        /* change repeat key as oneshot shift if following these keys */
+        case KC_ENT:
+        case KC_SPC:
+        case KC_TAB:
+        case APPPREV:
+        case APPNEXT:
+        case SWIME:
+            if (record->event.pressed) {
+                register_mods(MOD_LSFT);
+                add_oneshot_mods(MOD_LSFT);
+            } else
+                unregister_mods(MOD_LSFT);
+            return false;
+    }
   }
 #endif /* REPEAT_KEY_ENABLE */
 
@@ -834,7 +837,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
           if (!swapp_mod) {
               swapp_mod = (isMacOS ? MOD_BIT_LGUI : MOD_BIT_LALT);
-              clear_mods();
               wait_ms(TAP_CODE_DELAY);
               register_mods(swapp_mod);
               wait_ms(TAP_LONG_DELAY);
@@ -849,7 +851,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CAPS_WORD_ENABLE
             caps_word_off();
 #endif /* CAPS_WORD_ENABLE */
-            clear_mods();
             if (isMacOS) {
                 /* send global key */
                 host_consumer_send(AC_NEXT_KEYBOARD_LAYOUT_SELECT);
@@ -874,7 +875,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             uint8_t hold_mod = (isMacOS ? MOD_BIT_LGUI : MOD_BIT_LALT);
             uint16_t tap_key = (isMacOS ? KC_Q : KC_F4);
             if (record->event.pressed) {
-                clear_mods();
                 register_mods(hold_mod);
                 wait_ms(TAP_LONG_DELAY);
                 tap_code16_delay(tap_key, TAP_CODE_DELAY);
@@ -910,9 +910,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (isMacOS && record->event.pressed) {
             keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
             tap_code16_delay(G(keycode), TAP_CODE_DELAY);
-#ifdef REPEAT_KEY_ENABLE
-            set_last_keycode(G(keycode));
-#endif /* REPEAT_KEY_ENABLE */
             return false;
         }
         break;
@@ -925,6 +922,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
     */
+
+    case MS_BTN1 ... MS_BTN2:
+        // don't want oneshot shift apply to mouse keys
+        if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
+            del_oneshot_mods(MOD_MASK_SHIFT);
+        }
+        break;
+
 #ifdef POINTING_DEVICE_ENABLE
     case DRAG_SCROLL:
       set_scrolling = record->event.pressed;
@@ -972,11 +977,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         /* cancel OSM shift with BSPC */
         case HRM_BSPC:
-            if (!record->tap.count)
-                break;
-            if (record->event.pressed && (get_oneshot_mods() & MOD_MASK_SHIFT)) {
-                del_oneshot_mods(MOD_MASK_SHIFT);
-                return false;
+            if (record->tap.count && record->event.pressed) {
+                if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
+                    del_oneshot_mods(MOD_MASK_SHIFT);
+                    return false;
+                }
             }
             break;
 
