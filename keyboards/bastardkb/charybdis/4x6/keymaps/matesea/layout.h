@@ -2,7 +2,7 @@
 #pragma once
 
 // Macro for conveniently defining Charybdis 4x6 layouts.
-#define LAYOUT_charybdis_4x6(                                     \
+#define LAYOUT_LR(                                     \
     k00, k01, k02, k03, k04, k05,                      \
     k10, k11, k12, k13, k14, k15,                      \
     k20, k21, k22, k23, k24, k25,                      \
@@ -14,7 +14,8 @@
                          k60, k61, k62, k63, k64, k65, \
                          k70, k71, k72, k73, k74, k75, \
                          k80, k81, k82, k83, k84, k85, \
-                    k90, k91, k92)                          \
+                         k90, k91,  \
+                         k92)                          \
     LAYOUT(k00, k01, k02, k03, k04, k05,   k50, k51, k52, k53, k54, k55, \
            k10, k11, k12, k13, k14, k15,   k60, k61, k62, k63, k64, k65, \
            k20, k21, k22, k23, k24, k25,   k70, k71, k72, k73, k74, k75, \

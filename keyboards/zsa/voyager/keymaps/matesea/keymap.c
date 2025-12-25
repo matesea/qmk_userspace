@@ -504,6 +504,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
                  return FLOW_TAP_TERM - 25;
 
             case HRM_A: case HRM_SCLN:      // gui
+                 if (isMacOS)
+                     return FLOW_TAP_TERM - 50; // 100ms
             case HRM_S: case HRM_L:         // alt
             case HRM_X:                     // LT(EXT)
 #ifdef POINTING_DEVICE_ENABLE
