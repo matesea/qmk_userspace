@@ -205,11 +205,6 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-#define LOWER MO(LAYER_LOWER)
-#define RAISE MO(LAYER_RAISE)
-#define PT_Z LT(LAYER_POINTER, KC_Z)
-#define PT_SLSH LT(LAYER_POINTER, KC_SLSH)
-
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
 #    define DPI_MOD KC_NO
@@ -236,8 +231,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,
         KC_UNDS,   HRM_A,   HRM_S,   HRM_D,   HRM_F,   HRM_G,
         SWIME,     HRM_Z,   HRM_X,   KC_C,    HRM_V,   HRM_B,
-                                     OSM_SFT, HRM_ENT, QK_REP,
-                                              MS_BTN2, MS_BTN1,
+                                     QK_REP,  OSM_SFT, HRM_ENT,
+                                              MS_BTN1, MS_BTN2,
 
                    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,     KC_EQL,
                    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,     KC_MINS,
@@ -264,7 +259,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
         _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
         XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                   USRNAME, _______, _______,
+                                   _______, USRNAME, _______,
                                             XXXXXXX, XXXXXXX,
 
                  _______, _______,  _______, _______, _______, _______,
@@ -302,31 +297,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, CLOSAPP, C(KC_W), APPPREV, APPNEXT, C(KC_T),
             _______, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
-                                       XXXXXXX, XXXXXXX, _______,
-                                                XXXXXXX, XXXXXXX,
+                                       _______, XXXXXXX, _______,
+                                                _______, _______,
 
                      SELLINE,   SELWBAK, SELWORD, XXXXXXX, XXXXXXX, QK_LLCK,
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
                      KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  KC_PSCR,
                      G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  KC_SCRL,
                      _______,   _______,
-                     XXXXXXX
+                     _______
      ),
 
     [FN] = LAYOUT_LR(
             QK_LLCK, KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
             QK_BOOT, KC_F12,  KC_F9,   KC_F8,   KC_F7,   DB_TOGG,
             QK_RBT,  KC_F11,  KC_F6,   KC_F5,   KC_F4,   XXXXXXX,
-            XXXXXXX, KC_F10,  KC_F3,   KC_F2,   KC_F1,   RGBHRND,
-                                       XXXXXXX, XXXXXXX, _______,
-                                                XXXXXXX, XXXXXXX,
+            EE_CLR,  KC_F10,  KC_F3,   KC_F2,   KC_F1,   RGBHRND,
+                                       _______, XXXXXXX, _______,
+                                                _______, _______,
 
                      _______,  _______,  _______, _______, _______, _______,
                      XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX,  KC_LSFT,  KC_LCTL, KC_LALT, KC_LGUI, _______,
                      S_D_RMOD, DPI_RMOD, DPI_MOD, S_D_MOD, XXXXXXX, _______,
                      _______, _______,
-                     XXXXXXX
+                     _______
             ),
 
     [TMUX] = LAYOUT_LR(
@@ -334,15 +329,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, TMUX_Q,  TMUX_W,  TMUX_P,   TMUX_N,  XXXXXXX,
             _______, TMUX_A,  TMUX_S,  XXXXXXX,  TMUX_F,  TMUX_G,
             _______, TMUX_Z,  TMUX_X,  TMUX_C,   TMUX_V,  XXXXXXX,
-                                       XXXXXXX, XXXXXXX, _______,
-                                                XXXXXXX, XXXXXXX,
+                                       _______, XXXXXXX, _______,
+                                                _______, _______,
 
                        _______,   _______,   _______,   _______,   _______,   _______,
                        TMUX_ML,   TMUX_MD,   TMUX_MU,   TMUX_MR,   TMUX_RBRC, _______,
                        TMUX_H,    TMUX_J,    TMUX_K,    TMUX_L,    TMUX_SLSH, _______,
                        TMUX_LCBR, TMUX_LBRC, TMUX_RBRC, TMUX_RCBR, TMUX_QUES, _______,
                        TMUX_BSPC, TMUX_SPC,
-                       XXXXXXX
+                       _______
             ),
 
     [DIR] = LAYOUT_LR(
@@ -350,15 +345,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             XXXXXXX, RBRC_Q,  RBRC_W,  RBRC_E,  RBRC_R,  RBRC_T,
             TMUX_N,  RBRC_A,  RBRC_S,  RBRC_D,  RBRC_F,  RBRC_G,
             XXXXXXX, RBRC_Z,  RBRC_X,  RBRC_C,  RBRC_V,  RBRC_B,
-                                       XXXXXXX, XXXXXXX, _______,
-                                                XXXXXXX, XXXXXXX,
+                                       _______, XXXXXXX, _______,
+                                                _______, _______,
 
                      _______, _______, _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______,
-                     XXXXXXX
+                     _______
             ),
 
 };
@@ -976,12 +971,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case HRM_B:
       if (!record->tap.count)
-          charybdis_set_pointer_sniping_enabled(record->event.pressed);
+          charybdis_set_pointer_sniping_enabled(!!record->event.pressed);
       break;
 
     case HRM_G:
       if (!record->tap.count)
-          charybdis_set_pointer_dragscroll_enabled(record->event.pressed);
+          charybdis_set_pointer_dragscroll_enabled(!!record->event.pressed);
       break;
   }
 

@@ -947,12 +947,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case HRM_B:
       if (!record->tap.count)
-          navigator_aim = record->event.pressed;
+          navigator_aim = !!record->event.pressed;
       break;
 
     case HRM_G:
       if (!record->tap.count)
-          set_scrolling = record->event.pressed;
+          set_scrolling = !!record->event.pressed;
       break;
 #endif /* POINTING_DEVICE_ENABLE */
   }
