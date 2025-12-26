@@ -44,10 +44,12 @@
 // - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS`
 // - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD`
 // #define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-#define CHARYBDIS_MINIMUM_DEFAULT_DPI 800
+#endif // POINTING_DEVICE_ENABLE
+
+#define CHARYBDIS_MINIMUM_DEFAULT_DPI 600
 #define CHARYBDIS_CONFIG_SYNC
 #define WHEEL_EXTENDED_SUPPORT
-#endif // POINTING_DEVICE_ENABLE
+#define MASTER_RIGHT
 
 #define TAP_CODE_DELAY 5
 
@@ -111,6 +113,8 @@
 // #define POINTING_DEVICE_HIRES_SCROLL_ENABLE
 // #define POINTING_DEVICE_HIRES_SCROLL_EXPONENT 1
 // #define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
-// XXX: this will cause issue on holding left mouse key and drag
-// #define MOUSE_EXTENDED_REPORT
+
+// XXX: this will cause issue on holding left mouse key and drag on
+//      when usb cable is connected at right hand side, issue is gone
+#define MOUSE_EXTENDED_REPORT
 #endif
