@@ -320,7 +320,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [DIR] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
             XXXXXXX, RBRC_Q,  RBRC_W,  RBRC_E,  RBRC_R,  RBRC_T,
-            TMUX_N,  RBRC_A,  RBRC_S,  RBRC_D,  RBRC_F,  RBRC_G,
+            XXXXXXX, RBRC_A,  RBRC_S,  RBRC_D,  RBRC_F,  RBRC_G,
             XXXXXXX, RBRC_Z,  RBRC_X,  RBRC_C,  RBRC_V,  RBRC_B,
                                                 XXXXXXX, _______,
 
@@ -509,7 +509,7 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              *      this meaningful value should be around 60ms for me
              */
             case HRM_D: case HRM_K: // ctrl
-                 return FLOW_TAP_TERM - 75; // 75ms
+                return FLOW_TAP_TERM - 75; // 75ms
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
@@ -553,13 +553,8 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
     switch (keycode) {
       case KC_A ... KC_Y:
         if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
-          *remembered_mods &= ~MOD_MASK_SHIFT;
+            *remembered_mods &= ~MOD_MASK_SHIFT;
         }
-        break;
-
-      case KC_TAB: // only remember shift when tab pressed
-      case C(KC_TAB):
-        *remembered_mods &= MOD_MASK_SHIFT;
         break;
 
       case MS_BTN1 ... MS_BTN2: // no need to remember any modifiers for mouse keys
@@ -578,13 +573,6 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
-            case KC_TAB:
-            case C(KC_TAB):
-                if (mods & MOD_MASK_SHIFT)
-                    return keycode;
-                else
-                    return S(keycode);
-
 #ifdef DIRECTION_LAYER_ENABLE
             /* reverse vim navigation */
             case LBRC_A ... LBRC_Z:
@@ -837,9 +825,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (get_repeat_key_count() > 0) {
       switch (get_tap_keycode(keycode)) {
         /* change repeat key as oneshot shift if following these keys */
+        case KC_TAB:
         case KC_ENT:
         case KC_SPC:
-        case KC_TAB:
         case APPPREV:
         case APPNEXT:
         case SWIME:
