@@ -571,7 +571,14 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
 
 #ifndef NO_ALT_REPEAT_KEY
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    if ((mods & ~MOD_MASK_SHIFT) == 0) {
+    if (keycode == KC_TAB) {
+        // ctrl+tab <=> ctrl+shift+tab
+        if ((mods & ~MOD_MASK_CS) == 0 && (mods & MOD_MASK_CTRL)) {
+            if (mods & MOD_MASK_SHIFT)
+                return C(KC_TAB);
+            return C(S(KC_TAB));
+        }
+    } else if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
 #ifdef DIRECTION_LAYER_ENABLE
             /* reverse vim navigation */
@@ -778,6 +785,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   const uint8_t all_mods = (mods | get_weak_mods() | get_oneshot_mods());
   const uint8_t shift_mods = all_mods & MOD_MASK_SHIFT;
   const uint8_t ctrl_mods = all_mods & MOD_MASK_CTRL;
+  const uint8_t alt_mods = all_mods & MOD_MASK_ALT;
   const uint8_t layer = read_source_layers_cache(record->event.key);
 
   dlog_record(keycode, record);
@@ -821,11 +829,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 #endif
 
-#if defined(REPEAT_KEY_ENABLE)
+#ifdef REPEAT_KEY_ENABLE
   if (get_repeat_key_count() > 0) {
       switch (get_tap_keycode(keycode)) {
         /* change repeat key as oneshot shift if following these keys */
         case KC_TAB:
+            if (all_mods & MOD_MASK_CAG) break; // repeat ctrl/gui/alt+tab
         case KC_ENT:
         case KC_SPC:
         case APPPREV:
@@ -1002,10 +1011,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case ARROW:
           clear_mods();
           SEND_STRING(ctrl_mods ?
-                  (shift_mods ?
+                  (alt_mods ?
                       "<=>" :
                       "=>") :
-                  (shift_mods ?
+                  (alt_mods ?
                       "<->" :
                       "->"));
           set_mods(mods);
