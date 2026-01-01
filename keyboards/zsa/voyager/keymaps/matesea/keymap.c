@@ -133,7 +133,6 @@ enum custom_keycodes {
 
 struct keystring_t {
     const char *str;
-    uint8_t delay;
 };
 
 enum {
@@ -619,63 +618,46 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 #endif /* NO_ALT_REPEAT_KEY */
 #endif /* REPEAT_KEY_ENABLE */
 
-#ifdef DIRECTION_LAYER_ENABLE
-static void generate_directional_string(uint16_t keycode, char* buf) {
-    switch (keycode) {
-        case LBRC_A ... LBRC_Z:
-            buf[0] = '[';
-            buf[1] = keycode - LBRC_A + 'a';
-            break;
-        case RBRC_A ... RBRC_Z:
-            buf[0] = ']';
-            buf[1] = keycode - RBRC_A + 'a';
-            break;
-        default:
-            buf[0] = '\0';
-            break;
-    }
-    buf[2] = '\0';
-}
-#endif /* DIRECTION_LAYER_ENABLE */
-
 #define TAP_LONG_DELAY 50
 static const struct keystring_t keystrings[] = {
-    [UPDIR - KEYSTR_MIN]     = {"../", TAP_CODE_DELAY},
-    [USRNAME - KEYSTR_MIN]   = {"wenlongy", TAP_CODE_DELAY},
+    [UPDIR - KEYSTR_MIN]     = {"../"},
+    [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
 
-    [TMUX_A - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LCTL(SS_TAP(X_A)), TAP_CODE_DELAY},
-    [TMUX_C - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LCTL(SS_TAP(X_C)), TAP_CODE_DELAY},
-    [TMUX_X - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_X), TAP_CODE_DELAY},
-    [TMUX_V - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_V), TAP_CODE_DELAY},
-    [TMUX_G - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_G), TAP_CODE_DELAY},
-    [TMUX_P - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_P), TAP_CODE_DELAY},
-    [TMUX_Q - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_Q), TAP_CODE_DELAY},
-    [TMUX_SLSH - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_SLSH), TAP_CODE_DELAY},
-    [TMUX_QUES - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LSFT(SS_TAP(X_SLSH)), TAP_CODE_DELAY},
-    [TMUX_W - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_W), TAP_CODE_DELAY},
-    [TMUX_N - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_N), TAP_CODE_DELAY},
-    [TMUX_S - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_S), TAP_CODE_DELAY},
-    [TMUX_F - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_F), TAP_CODE_DELAY},
-    [TMUX_Z - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_Z), TAP_CODE_DELAY},
+    // the tmux prefix is sent in process_record_user below
+    // to reduce binary size
+    [TMUX_A - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A))},
+    [TMUX_C - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_C))},
+    [TMUX_X - KEYSTR_MIN]    = {SS_TAP(X_X)},
+    [TMUX_V - KEYSTR_MIN]    = {SS_TAP(X_V)},
+    [TMUX_G - KEYSTR_MIN]    = {SS_TAP(X_G)},
+    [TMUX_P - KEYSTR_MIN]    = {SS_TAP(X_P)},
+    [TMUX_Q - KEYSTR_MIN]    = {SS_TAP(X_Q)},
+    [TMUX_SLSH - KEYSTR_MIN] = {SS_TAP(X_SLSH)},
+    [TMUX_QUES - KEYSTR_MIN] = {SS_LSFT(SS_TAP(X_SLSH))},
+    [TMUX_W - KEYSTR_MIN]    = {SS_TAP(X_W)},
+    [TMUX_N - KEYSTR_MIN]    = {SS_TAP(X_N)},
+    [TMUX_S - KEYSTR_MIN]    = {SS_TAP(X_S)},
+    [TMUX_F - KEYSTR_MIN]    = {SS_TAP(X_F)},
+    [TMUX_Z - KEYSTR_MIN]    = {SS_TAP(X_Z)},
 
-    [TMUX_LBRC - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_LBRC), TAP_CODE_DELAY},
-    [TMUX_RBRC - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_RBRC), TAP_CODE_DELAY},
+    [TMUX_LBRC - KEYSTR_MIN] = {SS_TAP(X_LBRC)},
+    [TMUX_RBRC - KEYSTR_MIN] = {SS_TAP(X_RBRC)},
 
-    [TMUX_H - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_H), TAP_CODE_DELAY},
-    [TMUX_K - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_K), TAP_CODE_DELAY},
-    [TMUX_J - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_J), TAP_CODE_DELAY},
-    [TMUX_L - KEYSTR_MIN]    = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_L), TAP_CODE_DELAY},
+    [TMUX_H - KEYSTR_MIN]    = {SS_TAP(X_H)},
+    [TMUX_K - KEYSTR_MIN]    = {SS_TAP(X_K)},
+    [TMUX_J - KEYSTR_MIN]    = {SS_TAP(X_J)},
+    [TMUX_L - KEYSTR_MIN]    = {SS_TAP(X_L)},
 
-    [TMUX_LCBR - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LSFT(SS_TAP(X_LBRC)), TAP_CODE_DELAY},
-    [TMUX_RCBR - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LSFT(SS_TAP(X_RBRC)), TAP_CODE_DELAY},
+    [TMUX_LCBR - KEYSTR_MIN] = {SS_LSFT(SS_TAP(X_LBRC))},
+    [TMUX_RCBR - KEYSTR_MIN] = {SS_LSFT(SS_TAP(X_RBRC))},
 
-    [TMUX_SPC - KEYSTR_MIN]  = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_SPC), TAP_CODE_DELAY},
-    [TMUX_BSPC - KEYSTR_MIN] = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_TAP(X_BSPC), TAP_CODE_DELAY},
+    [TMUX_SPC - KEYSTR_MIN]  = {SS_TAP(X_SPC)},
+    [TMUX_BSPC - KEYSTR_MIN] = {SS_TAP(X_BSPC)},
 
-    [TMUX_ML - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LALT(SS_TAP(X_LEFT)), TAP_CODE_DELAY},
-    [TMUX_MD - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LALT(SS_TAP(X_DOWN)), TAP_CODE_DELAY},
-    [TMUX_MU - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LALT(SS_TAP(X_UP)), TAP_CODE_DELAY},
-    [TMUX_MR - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_DELAY(TAP_LONG_DELAY) SS_LALT(SS_TAP(X_RIGHT)), TAP_CODE_DELAY},
+    [TMUX_ML - KEYSTR_MIN]   = {SS_LALT(SS_TAP(X_LEFT))},
+    [TMUX_MD - KEYSTR_MIN]   = {SS_LALT(SS_TAP(X_DOWN))},
+    [TMUX_MU - KEYSTR_MIN]   = {SS_LALT(SS_TAP(X_UP))},
+    [TMUX_MR - KEYSTR_MIN]   = {SS_LALT(SS_TAP(X_RIGHT))},
 };
 
 #ifndef NO_DEBUG
@@ -1021,21 +1003,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           return false;
 
 #ifdef DIRECTION_LAYER_ENABLE
-        case LBRC_A ... RBRC_Z:
+        case LBRC_A ... LBRC_Z:
           {
-              static char buf[5] = {0};
+              const char buf[] = {'[', (keycode - LBRC_A) + 'a', '\0'};
               clear_mods();
-              generate_directional_string(keycode, buf);
               SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
               set_mods(mods);
+              return false;
           }
-          return false;
+        case RBRC_A ... RBRC_Z:
+          {
+              const char buf[] = {']', (keycode - RBRC_A) + 'a', '\0'};
+              clear_mods();
+              SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
+              set_mods(mods);
+              return false;
+          }
 #endif /* DIRECTION_LAYER_ENABLE */
-
-        case KEYSTR_MIN ... KEYSTR_MAX:
+        case TMUX_A ... TMUX_RCBR:
+          clear_mods();
+          SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_A)), TAP_LONG_DELAY); // send tmux prefix
+        case UPDIR ... USRNAME:
           const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
           clear_mods();
-          SEND_STRING_DELAY(p->str, p->delay);
+          SEND_STRING_DELAY(p->str, TAP_CODE_DELAY);
           set_mods(mods);
           return false;
 
