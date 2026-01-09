@@ -268,7 +268,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
-                     AML_OFF, _______
+                     _______, _______
             ),
 
     // shortcuts that can be done with one-hand
@@ -513,19 +513,19 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
+#ifdef POINTING_DEVICE_ENABLE
+            case HRM_B:                     // NAVIGATOR_AIM
+            case HRM_G:                     // DRAG_SCROLL
+#endif // POINTING_DEVICE_ENABLE
             case HRM_Z: case HRM_SLSH:      // LT(TMUX)
-                 return FLOW_TAP_TERM - 25;
+            case HRM_X:                     // LT(EXT)
+                 return FLOW_TAP_TERM - 50; // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
                  if (isMacOS)
                      return FLOW_TAP_TERM - 50; // 100ms
             case HRM_S: case HRM_L:         // alt
-            case HRM_X:                     // LT(EXT)
-#ifdef POINTING_DEVICE_ENABLE
-            case HRM_B:                     // NAVIGATOR_AIM
-            case HRM_G:                     // DRAG_SCROLL
-#endif // POINTING_DEVICE_ENABLE
-                return FLOW_TAP_TERM;  // 150ms
+                return FLOW_TAP_TERM;       // 150ms
         }
     }
     return 0;
@@ -980,11 +980,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif /* DIRECTION_LAYER_ENABLE */
 
     switch (keycode) {
-        /* cancel OSM shift with BSPC */
+        /* cancel OSM shift/auto mouse layer with BSPC */
         case HRM_BSPC:
             if (record->tap.count && record->event.pressed) {
-                if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
+                if ((get_oneshot_mods() & MOD_MASK_SHIFT)
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+                        || (layer_state_is(EXT) && !is_layer_locked(EXT))
+#endif
+                        )
+                {
                     del_oneshot_mods(MOD_MASK_SHIFT);
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+                    auto_mouse_layer_off();
+#endif
                     return false;
                 }
             }
