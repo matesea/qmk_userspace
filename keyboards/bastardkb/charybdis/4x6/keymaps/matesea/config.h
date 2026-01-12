@@ -39,16 +39,6 @@
 
 /* Charybdis-specific features. */
 
-#ifdef POINTING_DEVICE_ENABLE
-// Automatically enable the pointer layer when moving the trackball.  See also:
-// - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS`
-// - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD`
-// #define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-#endif // POINTING_DEVICE_ENABLE
-
-#define CHARYBDIS_MINIMUM_DEFAULT_DPI 600
-#define CHARYBDIS_CONFIG_SYNC
-#define WHEEL_EXTENDED_SUPPORT
 
 #define TAP_CODE_DELAY 5
 
@@ -107,13 +97,23 @@
 #define FLOW_TAP_TERM 150
 // #define ACTION_DEBUG
 
-#ifdef POINTING_DEVICE_ENABLE
 // XXX: somehow hires scroll only works on MacOS
 // #define POINTING_DEVICE_HIRES_SCROLL_ENABLE
 // #define POINTING_DEVICE_HIRES_SCROLL_EXPONENT 1
 // #define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
 
-// XXX: this will cause issue on holding left mouse key and drag on
-//      when usb cable is connected at right hand side, issue is gone
+// charybdis keyboard trackball specific settings
+#define CHARYBDIS_MINIMUM_DEFAULT_DPI 800
+#define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
+#define CHARYBDIS_MINIMUM_SNIPING_DPI 200
+#define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 100
+#define CHARYBDIS_CONFIG_SYNC
+#define WHEEL_EXTENDED_SUPPORT
 #define MOUSE_EXTENDED_REPORT
-#endif
+
+#ifdef POINTING_DEVICE_ENABLE
+// Automatically enable the pointer layer when moving the trackball.  See also:
+// - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS`
+// - `CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD`
+// #define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
+#endif // POINTING_DEVICE_ENABLE
