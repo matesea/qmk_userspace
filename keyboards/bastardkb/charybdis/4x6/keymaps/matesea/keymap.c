@@ -548,7 +548,6 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              *      this meaningful value should be around 60ms for me
              */
             case HRM_D: case HRM_K: // ctrl
-                return FLOW_TAP_TERM - 75; // 75ms
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
@@ -658,7 +657,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 #endif /* NO_ALT_REPEAT_KEY */
 #endif /* REPEAT_KEY_ENABLE */
 
-#define TAP_LONG_DELAY 50
+#define TAP_LONG_DELAY 10
 static const struct keystring_t keystrings[] = {
     [UPDIR - KEYSTR_MIN]     = {"../"},
     [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
@@ -1055,7 +1054,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif /* DIRECTION_LAYER_ENABLE */
         case TMUX_A ... TMUX_RCBR:
           clear_mods();
-          SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_A)), TAP_LONG_DELAY); // send tmux prefix
+          SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_A)), TAP_CODE_DELAY); // send tmux prefix
         case UPDIR ... USRNAME:
           const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
           clear_mods();

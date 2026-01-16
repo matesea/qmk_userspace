@@ -223,10 +223,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
              SWIME,   HRM_Z,  HRM_X,  KC_C,  HRM_V,   HRM_B,
                                              QK_REP,  HRM_ENT,
 
-                        KC_6,    KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
-                        KC_Y,    KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
-                        KC_H,    HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
-                        KC_N,    HRM_M, HRM_COMM, HRM_DOT, HRM_SLSH, KC_BSLS,
+                        KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
+                        KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
+                        KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
+                        KC_N,     HRM_M, HRM_COMM, HRM_DOT, HRM_SLSH, KC_BSLS,
                         HRM_BSPC, KC_SPC
   ),
 
@@ -508,7 +508,6 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              *      this meaningful value should be around 60ms for me
              */
             case HRM_D: case HRM_K: // ctrl
-                return FLOW_TAP_TERM - 75; // 75ms
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
@@ -618,7 +617,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 #endif /* NO_ALT_REPEAT_KEY */
 #endif /* REPEAT_KEY_ENABLE */
 
-#define TAP_LONG_DELAY 50
+#define TAP_LONG_DELAY 10
 static const struct keystring_t keystrings[] = {
     [UPDIR - KEYSTR_MIN]     = {"../"},
     [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
@@ -1030,7 +1029,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif /* DIRECTION_LAYER_ENABLE */
         case TMUX_A ... TMUX_RCBR:
           clear_mods();
-          SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_A)), TAP_LONG_DELAY); // send tmux prefix
+          SEND_STRING_DELAY(SS_LCTL(SS_TAP(X_A)), TAP_CODE_DELAY); // send tmux prefix
         case UPDIR ... USRNAME:
           const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
           clear_mods();
