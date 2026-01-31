@@ -558,13 +558,13 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #endif // POINTING_DEVICE_ENABLE
             case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_X:                     // LT(EXT)
-                 return FLOW_TAP_TERM - 50; // 100ms
+                 return FLOW_TAP_TERM;      // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
                  if (isMacOS)
-                     return FLOW_TAP_TERM - 50; // 100ms
+                     return FLOW_TAP_TERM;  // 100ms
             case HRM_S: case HRM_L:         // alt
-                return FLOW_TAP_TERM;       // 150ms
+                return FLOW_TAP_TERM + 50;  // 150ms
         }
     }
     return 0;
@@ -852,7 +852,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       switch (get_tap_keycode(keycode)) {
         /* change repeat key as oneshot shift if following these keys */
         case KC_TAB:
-            if (all_mods & MOD_MASK_CAG) break; // repeat ctrl/gui/alt+tab
+        case KC_BSPC:
+            if (all_mods & MOD_MASK_CAG)
+                break; // repeat when ctrl/gui/alt is held
         case KC_ENT:
         case KC_SPC:
         case APPPREV:
