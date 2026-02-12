@@ -309,7 +309,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                        _______, XXXXXXX, _______,
                                                 _______, _______,
 
-                     SELLINE,   SELWBAK, SELWORD, XXXXXXX, XXXXXXX, QK_LLCK,
+                     SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
                      KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  KC_PSCR,
                      G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  KC_SCRL,
