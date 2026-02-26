@@ -800,7 +800,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   const uint8_t mods = get_mods();
-  const uint8_t all_mods = (mods | get_weak_mods() | get_oneshot_mods());
+  const uint8_t all_mods = (mods | get_weak_mods());
   const uint8_t shift_mods = all_mods & MOD_MASK_SHIFT;
   const uint8_t ctrl_mods = all_mods & MOD_MASK_CTRL;
   const uint8_t alt_mods = all_mods & MOD_MASK_ALT;
@@ -991,12 +991,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         switch (keycode) {
           case RBRC_A ... RBRC_Z:
               keycode += LBRC_A - RBRC_A;
-#ifdef REPEAT_KEY_ENABLE
-              set_last_keycode(keycode);
-#endif
-              break;
-          case TMUX_N:
-              keycode = TMUX_P;
 #ifdef REPEAT_KEY_ENABLE
               set_last_keycode(keycode);
 #endif
