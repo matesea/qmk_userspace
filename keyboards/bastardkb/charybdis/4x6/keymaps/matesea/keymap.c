@@ -22,6 +22,7 @@
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
 #define DIRECTION_LAYER_ENABLE
+
 enum custom_keycodes {
   ARROW = SAFE_RANGE,    // -> =>
   SWIME,   // switch ime
@@ -159,17 +160,11 @@ enum keycode_aliases {
     HRM_F   = LSFT_T(KC_F),
 
     HRM_Z   = LT(TMUX, KC_Z),
-    // HRM_X   = LT(EXT, KC_X),
     HRM_X   = KC_X,
     HRM_V   = LT(SYM, KC_V),
 
-#if defined(POINTING_DEVICE_ENABLE)
     HRM_B   = LT(0, KC_B), // hold for navigator aim mode
     HRM_G   = LT(0, KC_G), // hold for scroll drag
-#else
-    HRM_B   = KC_B,
-    HRM_G   = KC_G,
-#endif // POINTING_DEVICE_ENABLE
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
@@ -552,10 +547,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
-#ifdef POINTING_DEVICE_ENABLE
             case HRM_B:                     // NAVIGATOR_AIM
             case HRM_G:                     // DRAG_SCROLL
-#endif // POINTING_DEVICE_ENABLE
             case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_X:                     // LT(EXT)
                  return FLOW_TAP_TERM;      // 100ms
@@ -752,24 +745,6 @@ void oneshot_mods_changed_user(uint8_t mods) {
 }
 #endif
 
-#ifdef POINTING_DEVICE_ENABLE
-
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-void pointing_device_init_user(void) {
-    set_auto_mouse_layer(EXT);
-    set_auto_mouse_enable(true);
-}
-bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
-  // Treat all keys as mouse keys when in the automouse layer so that any key set resets the timeout without leaving the layer.
-  if (!layer_state_is(AUTO_MOUSE_TARGET_LAYER)){
-    // When depressing a mouse key with a LT key at the same time, the mouse key tracker is not decremented.
-    // This is a workaround to fix that
-    return (IS_MOUSE_KEYCODE(keycode) && !record->event.pressed);
-  }
-  return false;
-}
-#endif /* POINTING_DEVICE_AUTO_MOUSE_ENABLE */
-#endif /* POINTING_DEVICE_ENABLE */
 
 static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, gui for MAC
 
@@ -824,9 +799,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+#if 0
   // XXX: import from oryx
   // no MT(mouse key) on my keymap
-#if 0
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse keys with modifiers work inconsistently across operating systems, this makes sure that modifiers are always
@@ -860,11 +835,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case APPPREV:
         case APPNEXT:
         case SWIME:
-            if (record->event.pressed) {
-                register_mods(MOD_LSFT);
+            if (record->event.pressed)
                 add_oneshot_mods(MOD_LSFT);
-            } else
-                unregister_mods(MOD_LSFT);
             return false;
     }
   }
@@ -971,7 +943,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 
-#ifdef POINTING_DEVICE_ENABLE
     case HRM_B:
       if (!record->tap.count)
           charybdis_set_pointer_sniping_enabled(!!record->event.pressed);
@@ -981,7 +952,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (!record->tap.count)
           charybdis_set_pointer_dragscroll_enabled(!!record->event.pressed);
       break;
-#endif /* POINTING_DEVICE_ENABLE */
   }
 
   if (record->event.pressed) {
@@ -1003,16 +973,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         /* cancel OSM shift/auto mouse layer with BSPC */
         case HRM_BSPC:
             if (record->tap.count && record->event.pressed) {
-                if ((get_oneshot_mods() & MOD_MASK_SHIFT)
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-                        || (layer_state_is(EXT) && !is_layer_locked(EXT))
-#endif
-                        )
+                if ((get_oneshot_mods() & MOD_MASK_SHIFT))
                 {
                     del_oneshot_mods(MOD_MASK_SHIFT);
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-                    auto_mouse_layer_off();
-#endif
                     return false;
                 }
             }

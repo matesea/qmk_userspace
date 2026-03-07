@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 #include "layout.h"
+#include "automouse.h"
 
 #define MOON_LED_LEVEL LED_LEVEL
 #define ML_SAFE_RANGE SAFE_RANGE
@@ -13,17 +14,6 @@ enum custom_keycodes {
   APPPREV, // swap forground app to previous
   APPNEXT, // swap forground app to next
   RGBHRND, // random select effect
-
-  // navigator trackball specific
-  TOGGLE_SCROLL,        // toggle scroll drag
-  DRAG_SCROLL,          // hold to enable scroll drag
-  NAVIGATOR_TURBO,      // hold to enable trackball turbo mode
-  NAVIGATOR_AIM,        // hold to enable trackball aim mode
-  NAVIGATOR_INC_CPI,    // increase cpi
-  NAVIGATOR_DEC_CPI,    // decrease cpi
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-  AUTO_MOUSE_LAYER_OFF, // deactivate auto mouse layer
-#endif
 
   // dummy keycode for C(KC_A)/C(KC_S)/C(KC_D)/C(KC_F)
   CA,
@@ -154,9 +144,6 @@ enum keycode_aliases {
     NAV_AIM = NAVIGATOR_AIM,
     CPI_INC = NAVIGATOR_INC_CPI,
     CPI_DEC = NAVIGATOR_DEC_CPI,
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-    AML_OFF = AUTO_MOUSE_LAYER_OFF,
-#endif
 
     HRM_A   = LGUI_T(KC_A),
     HRM_S   = LALT_T(KC_S),
@@ -167,13 +154,8 @@ enum keycode_aliases {
     HRM_X   = LT(EXT, KC_X),
     HRM_V   = LT(SYM, KC_V),
 
-#if defined(POINTING_DEVICE_ENABLE)
-    HRM_B   = LT(0, KC_B), // hold for navigator aim mode
-    HRM_G   = LT(0, KC_G), // hold for scroll drag
-#else
-    HRM_B   = KC_B,
-    HRM_G   = KC_G,
-#endif // POINTING_DEVICE_ENABLE
+    HRM_B   = LT(EXT, KC_B), // hold for navigator aim mode
+    HRM_G   = LT(EXT, KC_G), // hold for scroll drag
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
@@ -247,7 +229,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
           _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
           XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                                  USRNAME, _______,
+                                              USRNAME, _______,
 
                    _______, _______,  _______, _______, _______, _______,
                    KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
@@ -261,10 +243,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, _______, _______, _______, _______, _______,
             _______, _______, _______, _______, _______, _______,
             _______, _______, _______, _______, _______, _______,
-            _______, _______, _______, _______, MS_BTN2, _______,
+            _______, _______, _______, QK_LLCK, MS_BTN2, _______,
                                                 MS_BTN1, HRM_ENT,
 
-                     _______, _______, _______, _______, _______, QK_LLCK,
+                     _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______,
@@ -465,6 +447,7 @@ bool get_chordal_hold(
         case HRM_X:
             switch (other_keycode) {
                 // mouse keys
+                case HRM_V:
                 case KC_C:
                     return true;
             }
@@ -512,10 +495,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
-#ifdef POINTING_DEVICE_ENABLE
             case HRM_B:                     // NAVIGATOR_AIM
             case HRM_G:                     // DRAG_SCROLL
-#endif // POINTING_DEVICE_ENABLE
             case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_X:                     // LT(EXT)
                  return FLOW_TAP_TERM;      // 100ms
@@ -712,11 +693,10 @@ void oneshot_mods_changed_user(uint8_t mods) {
 }
 #endif
 
-#ifdef POINTING_DEVICE_ENABLE
 extern bool set_scrolling;
-extern bool navigator_turbo;
 extern bool navigator_aim;
 
+/*****
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 void pointing_device_init_user(void) {
     set_auto_mouse_layer(EXT);
@@ -731,8 +711,8 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
   }
   return false;
 }
-#endif /* POINTING_DEVICE_AUTO_MOUSE_ENABLE */
-#endif /* POINTING_DEVICE_ENABLE */
+#endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
+*****/
 
 static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, gui for MAC
 
@@ -758,6 +738,20 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     STATUS_LED_3(layer & (1 << 2));
 #endif
     return state;
+}
+
+/**********************
+   similar to is_mouse_record_user for auto mouse feature
+   but for automouse module
+**********************/
+static bool stay_mouse_layer(uint16_t keycode, keyrecord_t *record) {
+    if (is_layer_locked(EXT) || keycode == QK_LLCK)
+        return true;
+    if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode)))
+        return true;
+    if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode))
+        return record->event.pressed;
+    return false;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -787,14 +781,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+  if (layer_state_is(EXT) && !stay_mouse_layer(keycode, record)) {
+      layer_off(EXT);
+  }
+
+#if 0
   // XXX: import from oryx
   // no MT(mouse key) on my keymap
-#if 0
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse keys with modifiers work inconsistently across operating systems, this makes sure that modifiers are always
     // applied to the mouse key that was pressed.
-    if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
+    if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode)) || IS_CONSUMER_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
     if (record->event.pressed) {
         add_mods(QK_MODS_GET_MODS(keycode));
         send_keyboard_report();
@@ -823,11 +821,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case APPPREV:
         case APPNEXT:
         case SWIME:
-            if (record->event.pressed) {
-                register_mods(MOD_LSFT);
+            if (record->event.pressed)
                 add_oneshot_mods(MOD_LSFT);
-            } else
-                unregister_mods(MOD_LSFT);
             return false;
     }
   }
@@ -934,19 +929,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 
-#ifdef POINTING_DEVICE_ENABLE
-    case DRAG_SCROLL:
-      set_scrolling = record->event.pressed;
-      return false;
-
-    case NAVIGATOR_TURBO:
-      navigator_turbo = record->event.pressed;
-      return false;
-
-    case NAVIGATOR_AIM:
-      navigator_aim = record->event.pressed;
-      return false;
-
     case HRM_B:
       if (!record->tap.count)
           navigator_aim = !!record->event.pressed;
@@ -956,7 +938,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (!record->tap.count)
           set_scrolling = !!record->event.pressed;
       break;
-#endif /* POINTING_DEVICE_ENABLE */
   }
 
   if (record->event.pressed) {
@@ -978,16 +959,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         /* cancel OSM shift/auto mouse layer with BSPC */
         case HRM_BSPC:
             if (record->tap.count && record->event.pressed) {
-                if ((get_oneshot_mods() & MOD_MASK_SHIFT)
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-                        || (layer_state_is(EXT) && !is_layer_locked(EXT))
-#endif
-                        )
+                if ((get_oneshot_mods() & MOD_MASK_SHIFT) ||
+                        (layer_state_is(EXT) && !is_layer_locked(EXT)))
                 {
                     del_oneshot_mods(MOD_MASK_SHIFT);
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-                    auto_mouse_layer_off();
-#endif
+                    layer_off(EXT);
                     return false;
                 }
             }
@@ -1038,23 +1014,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           lighting_preset(RGB_MATRIX_CUSTOM_PALETTEFX_FLOW + (myrand() % 4), myrand());
           return false;
 #endif /* COMMUNITY_MODULE_PALETTEFX_ENABLE */
-
-#ifdef POINTING_DEVICE_ENABLE
-        case TOGGLE_SCROLL:
-            set_scrolling = !set_scrolling;
-            return false;
-        case NAVIGATOR_INC_CPI:
-            pointing_device_set_cpi(1);
-            return false;
-        case NAVIGATOR_DEC_CPI:
-            pointing_device_set_cpi(0);
-            return false;
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-        case AUTO_MOUSE_LAYER_OFF:
-            auto_mouse_layer_off();
-            return false;
-#endif
-#endif /* POINTING_DEVICE_ENABLE */
     }
   }
   return true;

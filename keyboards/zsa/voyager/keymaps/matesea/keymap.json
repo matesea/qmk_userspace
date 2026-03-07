@@ -1,9 +1,11 @@
 {
   "modules": [
     "zsa/defaults",
+    "zsa/navigator_trackball",
+    "zsa/automouse",
     "getreuer/select_word",
     "getreuer/lumino",
+    "getreuer/palettefx",
     // "dave-thompson/lumberjack",
-    "getreuer/palettefx"
   ]
 }
