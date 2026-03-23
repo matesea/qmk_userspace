@@ -230,49 +230,49 @@ bool process_detected_host_os_user(os_variant_t os) {
 #endif /* OS_DETECTION_ENABLE */
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [QWERTY] = LAYOUT_LR(
-             KC_ESC,  KC_1,   KC_2,   KC_3,    KC_4,    KC_5,
-             KC_TAB,  KC_Q,   KC_W,   KC_E,    KC_R,    KC_T,
-             KC_UNDS, HRM_A,  HRM_S,  HRM_D,   HRM_F,   HRM_G,
-             SWIME,   HRM_Z,  HRM_X,  KC_C,    HRM_V,   HRM_B,
-                                      OSM_SFT, QK_REP,  HRM_ENT,
-                                               MS_BTN2, MS_BTN1,
+    [QWERTY] = LAYOUT_LR(
+            KC_ESC,  KC_1,   KC_2,   KC_3,    KC_4,    KC_5,
+            KC_TAB,  KC_Q,   KC_W,   KC_E,    KC_R,    KC_T,
+            KC_UNDS, HRM_A,  HRM_S,  HRM_D,   HRM_F,   HRM_G,
+            SWIME,   HRM_Z,  HRM_X,  KC_C,    HRM_V,   HRM_B,
+                                     OSM_SFT, QK_REP,  HRM_ENT,
+                                                 MS_BTN2, MS_BTN1,
 
                         KC_6,     KC_7,    KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,    KC_I,     KC_O,    KC_P,     KC_MINS,
                         KC_H,     HRM_J,   HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
                         KC_N,     HRM_M,   HRM_COMM, HRM_DOT, HRM_SLSH, KC_BSLS,
                         HRM_BSPC, KC_SPC,
-                        QK_AREP
-  ),
+                          QK_AREP
+    ),
 
-    /* getreuer's symbol layer
-       ' < > - |
-       ! * / = &
-       ~ + [ ] %
-               X
+      /* getreuer's symbol layer
+         ' < > - |
+         ! * / = &
+         ~ + [ ] %
+                 X
 
-            ^ { } $ X
-            # ( ) ; "
-            @ : , . '
-            X
-       split symbol layer to two hands to reduce finger travel distance
-     */
-  [SYM] = LAYOUT_LR(
-          _______, _______, _______, _______, _______, _______,
-          _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
-          _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
-          XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                     _______, USRNAME, _______,
-                                              XXXXXXX, XXXXXXX,
+              ^ { } $ X
+              # ( ) ; "
+              @ : , . '
+              X
+         split symbol layer to two hands to reduce finger travel distance
+       */
+    [SYM] = LAYOUT_LR(
+            _______, _______, _______, _______, _______, _______,
+            _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
+            XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
+                                       _______, USRNAME, _______,
+                                                XXXXXXX, XXXXXXX,
 
-                   _______, _______,  _______, _______, _______, _______,
-                   KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
-                   KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, UPDIR,
-                   KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, KC_BSLS,
-                   _______, _______,
-                   XXXXXXX
-  ),
+                     _______, _______,  _______, _______, _______, _______,
+                     KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
+                     KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, UPDIR,
+                     KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, KC_BSLS,
+                     _______, _______,
+                     XXXXXXX
+    ),
 
 
 #if 0
@@ -542,7 +542,7 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              * XXX: tried investigating proper FLOW_TAP_TERM with qmk module dave-thompson/lumberjack
              *      this meaningful value should be around 60ms for me
              */
-            case HRM_D: case HRM_K: // ctrl
+            // case HRM_D: case HRM_K: // ctrl
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)

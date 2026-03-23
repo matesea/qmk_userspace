@@ -138,10 +138,6 @@ enum {
 };
 
 enum keycode_aliases {
-    SCL_TOG = TOGGLE_SCROLL,
-    SCL_DRG = DRAG_SCROLL,
-    NAV_TUR = NAVIGATOR_TURBO,
-    NAV_AIM = NAVIGATOR_AIM,
     CPI_INC = NAVIGATOR_INC_CPI,
     CPI_DEC = NAVIGATOR_DEC_CPI,
 
@@ -198,45 +194,45 @@ bool process_detected_host_os_user(os_variant_t os) {
 #endif /* OS_DETECTION_ENABLE */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [QWERTY] = LAYOUT_LR(
-             KC_ESC,  KC_1,   KC_2,   KC_3,  KC_4,    KC_5,
-             KC_TAB,  KC_Q,   KC_W,   KC_E,  KC_R,    KC_T,
-             KC_UNDS, HRM_A,  HRM_S,  HRM_D, HRM_F,   HRM_G,
-             SWIME,   HRM_Z,  HRM_X,  KC_C,  HRM_V,   HRM_B,
-                                             QK_REP,  HRM_ENT,
+    [QWERTY] = LAYOUT_LR(
+            KC_ESC,  KC_1,   KC_2,   KC_3,  KC_4,    KC_5,
+            KC_TAB,  KC_Q,   KC_W,   KC_E,  KC_R,    KC_T,
+            KC_UNDS, HRM_A,  HRM_S,  HRM_D, HRM_F,   HRM_G,
+            SWIME,   HRM_Z,  HRM_X,  KC_C,  HRM_V,   HRM_B,
+                                            QK_REP,  HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
                         KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
                         KC_N,     HRM_M, HRM_COMM, HRM_DOT, HRM_SLSH, KC_BSLS,
                         HRM_BSPC, KC_SPC
-  ),
+    ),
 
-    /* getreuer's symbol layer
-       ' < > - |
-       ! * / = &
-       ~ + [ ] %
-               X
+      /* getreuer's symbol layer
+         ' < > - |
+         ! * / = &
+         ~ + [ ] %
+                 X
 
-            ^ { } $ X
-            # ( ) ; "
-            @ : , . '
-            X
-       split symbol layer to two hands to reduce finger travel distance
-     */
-  [SYM] = LAYOUT_LR(
-          _______, _______, _______, _______, _______, _______,
-          _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
-          _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
-          XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                              USRNAME, _______,
+              ^ { } $ X
+              # ( ) ; "
+              @ : , . '
+              X
+         split symbol layer to two hands to reduce finger travel distance
+       */
+    [SYM] = LAYOUT_LR(
+            _______, _______, _______, _______, _______, _______,
+            _______, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            _______, KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
+            XXXXXXX, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
+                                                USRNAME, _______,
 
-                   _______, _______,  _______, _______, _______, _______,
-                   KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
-                   KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, UPDIR,
-                   KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, KC_BSLS,
-                   _______, _______
-  ),
+                     _______, _______,  _______, _______, _______, _______,
+                     KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
+                     KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, UPDIR,
+                     KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, KC_BSLS,
+                     _______, _______
+    ),
 
     // mouse keycodes and those often used together
     [EXT] = LAYOUT_LR(
@@ -257,7 +253,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            _______, CLOSAPP, C(KC_W), APPPREV, APPNEXT, C(KC_T),
+            _______, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             _______, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                                 XXXXXXX, _______,
@@ -436,6 +432,7 @@ bool get_chordal_hold(
         uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
         uint16_t other_keycode, keyrecord_t* other_record) {
     switch (tap_hold_keycode) {
+        /*
         case HRM_A:
             switch (other_keycode) {
                 // gui+E: explorer/gui+R: run
@@ -444,6 +441,7 @@ bool get_chordal_hold(
                     return true;
             }
             break;
+        */
         case HRM_X:
             switch (other_keycode) {
                 // mouse keys
@@ -490,7 +488,7 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              * XXX: tried investigating proper FLOW_TAP_TERM with qmk module dave-thompson/lumberjack
              *      this meaningful value should be around 60ms for me
              */
-            case HRM_D: case HRM_K: // ctrl
+            // case HRM_D: case HRM_K: // ctrl
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
@@ -749,8 +747,14 @@ static bool stay_mouse_layer(uint16_t keycode, keyrecord_t *record) {
         return true;
     if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode)))
         return true;
-    if (IS_QK_MOD_TAP(keycode) || IS_QK_LAYER_TAP(keycode))
-        return record->event.pressed;
+    // stay in mouse layer while modifiers at left hand side are held
+    switch (keycode) {
+        case HRM_A:
+        case HRM_S:
+        case HRM_D:
+        case HRM_F:
+            return record->event.pressed;
+    }
     return false;
 }
 
