@@ -488,7 +488,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              * XXX: tried investigating proper FLOW_TAP_TERM with qmk module dave-thompson/lumberjack
              *      this meaningful value should be around 60ms for me
              */
-            // case HRM_D: case HRM_K: // ctrl
+            case HRM_D: case HRM_K: // ctrl
+                return FLOW_TAP_TERM - 40; // 60ms
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
