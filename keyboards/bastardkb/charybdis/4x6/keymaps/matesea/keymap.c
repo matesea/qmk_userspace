@@ -160,7 +160,6 @@ enum keycode_aliases {
     HRM_F   = LSFT_T(KC_F),
 
     HRM_Z   = LT(TMUX, KC_Z),
-    HRM_X   = KC_X,
     HRM_V   = LT(SYM, KC_V),
 
     HRM_B   = LT(0, KC_B), // hold for navigator aim mode
@@ -234,16 +233,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_ESC,  KC_1,   KC_2,   KC_3,    KC_4,    KC_5,
             KC_TAB,  KC_Q,   KC_W,   KC_E,    KC_R,    KC_T,
             KC_UNDS, HRM_A,  HRM_S,  HRM_D,   HRM_F,   HRM_G,
-            SWIME,   HRM_Z,  HRM_X,  KC_C,    HRM_V,   HRM_B,
-                                     OSM_SFT, QK_REP,  HRM_ENT,
-                                                 MS_BTN2, MS_BTN1,
+            SWIME,   HRM_Z,  KC_X,   KC_C,    HRM_V,   HRM_B,
+                                     QK_REP,  OSM_SFT, HRM_ENT,
+                                              MS_BTN2, MS_BTN1,
 
                         KC_6,     KC_7,    KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,    KC_I,     KC_O,    KC_P,     KC_MINS,
                         KC_H,     HRM_J,   HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
                         KC_N,     HRM_M,   HRM_COMM, HRM_DOT, HRM_SLSH, KC_BSLS,
                         HRM_BSPC, KC_SPC,
-                          QK_AREP
+                        QK_AREP
     ),
 
       /* getreuer's symbol layer
@@ -543,15 +542,14 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
              *      this meaningful value should be around 60ms for me
              */
             case HRM_D: case HRM_K: // ctrl
-                 return FLOW_TAP_TERM - 40; // 60ms
+                return FLOW_TAP_TERM - 40; // 60ms
 
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
+            case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_B:                     // NAVIGATOR_AIM
             case HRM_G:                     // DRAG_SCROLL
-            case HRM_Z: case HRM_SLSH:      // LT(TMUX)
-            case HRM_X:                     // LT(EXT)
                  return FLOW_TAP_TERM;      // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
@@ -823,10 +821,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 #endif
 
+  /*
 #ifdef REPEAT_KEY_ENABLE
   if (get_repeat_key_count() > 0) {
       switch (get_tap_keycode(keycode)) {
-        /* change repeat key as oneshot shift if following these keys */
+        // change repeat key as oneshot shift if following these keys
         case KC_TAB:
         case KC_BSPC:
             if (all_mods & MOD_MASK_CAG)
@@ -841,7 +840,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
   }
-#endif /* REPEAT_KEY_ENABLE */
+#endif // REPEAT_KEY_ENABLE
+*/
 
   switch (keycode) {
     case APPPREV:

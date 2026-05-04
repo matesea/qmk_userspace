@@ -199,7 +199,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_TAB,  KC_Q,   KC_W,   KC_E,  KC_R,    KC_T,
             KC_UNDS, HRM_A,  HRM_S,  HRM_D, HRM_F,   HRM_G,
             SWIME,   HRM_Z,  HRM_X,  KC_C,  HRM_V,   HRM_B,
-                                            QK_REP,  HRM_ENT,
+                                            OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
@@ -494,9 +494,9 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
+            case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_B:                     // NAVIGATOR_AIM
             case HRM_G:                     // DRAG_SCROLL
-            case HRM_Z: case HRM_SLSH:      // LT(TMUX)
             case HRM_X:                     // LT(EXT)
                  return FLOW_TAP_TERM;      // 100ms
 
