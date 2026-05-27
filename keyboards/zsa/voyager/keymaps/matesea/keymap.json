@@ -2,7 +2,7 @@
   "modules": [
     "zsa/defaults",
     "zsa/navigator_trackball",
-    "zsa/automouse",
+    // "zsa/automouse",
     "getreuer/select_word",
     "getreuer/lumino",
     "getreuer/palettefx",

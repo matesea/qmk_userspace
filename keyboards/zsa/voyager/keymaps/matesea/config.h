@@ -82,14 +82,18 @@
 #endif
 
 #define WHEEL_EXTENDED_SUPPORT
-#define POINTING_DEVICE_HIRES_SCROLL_ENABLE
+// XXX: since importing navigator trackpad,
+//      high-resolution scroll causes scrolling extremely slow on windows platform
+// #define POINTING_DEVICE_HIRES_SCROLL_ENABLE
 // #ifdef POINTING_DEVICE_HIRES_SCROLL_EXPONENT
 //     #undef POINTING_DEVICE_HIRES_SCROLL_EXPONENT
 // #endif
 // #define POINTING_DEVICE_HIRES_SCROLL_EXPONENT 1
-#define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
+// #define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
 #define MOUSE_EXTENDED_REPORT
 #define NAVIGATOR_SCROLL_DIVIDER 50
+
+#ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
 /*
  * opt1: short timeout + oneshot: after pointing device moving,
  *       auto mouse layer remains on until any key press
@@ -100,7 +104,8 @@
 // #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTOMOUSE_LAYER 2 // EXT
 #define AUTOMOUSE_THRESHOLD 20
-#define AUTOMOUSE_TIMEOUT 3000
+#define AUTOMOUSE_TIMEOUT 5000
 // #define AUTOMOUSE_DELAY 120
 // #define AUTO_MOUSE_ONESHOT
 #define AUTOMOUSE_SCROLL_THRESHOLD AUTOMOUSE_THRESHOLD / NAVIGATOR_SCROLL_DIVIDER
+#endif
