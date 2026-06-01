@@ -82,10 +82,10 @@ enum custom_keycodes {
   UPDIR, // input ../ per press
   KEYSTR_MIN = UPDIR,
   USRNAME, // input username
-  TMXESC,  // c-a esc: copy mode
-  TMXPAST, // c-a ]  : paste in tmux
+  TMUXESC,  // c-a esc: copy mode
+  TMUXPAST, // c-a ]  : paste in tmux
 
-  KEYSTR_MAX = TMXPAST,
+  KEYSTR_MAX = TMUXPAST,
 };
 
 struct keystring_t {
@@ -109,11 +109,12 @@ enum keycode_aliases {
     HRM_D   = LCTL_T(KC_D),
     HRM_F   = LSFT_T(KC_F),
 
-    HRM_Z   = LT(EXT, KC_Z),
     HRM_V   = LT(SYM, KC_V),
 
-    HRM_B   = LT(EXT, KC_B), // hold for navigator aim mode
-    HRM_G   = LT(EXT, KC_G), // hold for scroll drag
+    // EXT
+    HRM_B   = LT(EXT, KC_B),        // aim mode
+    HRM_G   = LT(EXT, KC_G),        // EXT
+    HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
@@ -156,11 +157,11 @@ bool process_detected_host_os_user(os_variant_t os) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
-            KC_ESC,  KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
-            KC_TAB,  KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
-            KC_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
-            SWIME,   HRM_Z, KC_X,  KC_C,  HRM_V,   HRM_B,
-                                          OSM_SFT, HRM_ENT,
+            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
+            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
+            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
+            SWIME,    KC_Z,  KC_X,  KC_C,  HRM_V,   HRM_B,
+                                           OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
@@ -182,10 +183,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          split symbol layer to two hands to reduce finger travel distance
        */
     [SYM] = LAYOUT_LR(
-            _______, _______, _______, _______, _______, _______,
-            XXXXXXX, KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
-            TMXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
-            TMXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
+            _______,  _______, _______, _______, _______, _______,
+            XXXXXXX,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
+            TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
                                                 USRNAME, _______,
 
                      _______, _______,  _______, _______, _______, _______,
@@ -278,9 +279,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_F: case HRM_J:
         case HRM_M: case HRM_V:
-            return TAPPING_TERM; /* 180ms */
+            return TAPPING_TERM - 70; /* 180ms */
     }
-    return TAPPING_TERM + 70; /* 250ms */
+    return TAPPING_TERM; /* 250ms */
 }
 #endif /* TAPPING_TERM_PER_KEY */
 
@@ -414,11 +415,11 @@ static bool is_typing(uint16_t keycode) {
       case KC_DOT:
       case KC_SCLN:
       case KC_SLSH:
-      case KC_UNDS: // XXX: get_tap_keycode(HRM_UNDS) returns KC_MINS
       case KC_QUOT:
       case SWIME:
       case KC_BSLS:
       case KC_MINS:
+      // case KC_UNDS: // XXX: get_tap_keycode(HRM_UNDS) returns KC_MINS
       // thumb
       case KC_SPC:
       // case KC_BSPC:
@@ -444,9 +445,9 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
-            case HRM_B:                     // NAVIGATOR_AIM
-            case HRM_G:                     // DRAG_SCROLL
-            case HRM_Z:                     // LT(EXT)
+            case HRM_B:                     // aim mode
+            case HRM_G:                     // LT(EXT)
+            case HRM_UNDS:                  // drag scroll
                  return FLOW_TAP_TERM;      // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
@@ -526,8 +527,8 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 static const struct keystring_t keystrings[] = {
     [UPDIR - KEYSTR_MIN]     = {"../"},
     [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
-    [TMXESC - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_ESC)},
-    [TMXPAST - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_RBRC)},
+    [TMUXESC - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_ESC)},
+    [TMUXPAST - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_RBRC)},
 };
 
 #ifndef NO_DEBUG
@@ -808,9 +809,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           navigator_aim = !!record->event.pressed;
       break;
 
-    case HRM_G:
-      if (!record->tap.count)
-          set_scrolling = !!record->event.pressed;
+    case HRM_UNDS:
+      if (process_tap(record, KC_UNDS))
+            return false;
+      set_scrolling = !!record->event.pressed;
       break;
   }
 
@@ -880,7 +882,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
 
 #endif /* DIRECTION_LAYER_ENABLE */
-        case UPDIR ... TMXPAST:
+        case UPDIR ... TMUXPAST:
           {
               const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
               clear_mods();
