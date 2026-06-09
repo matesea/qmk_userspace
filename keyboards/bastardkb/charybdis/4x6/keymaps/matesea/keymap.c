@@ -243,16 +243,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            _______, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
-            _______, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
-            _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
+            XXXXXXX, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            DRG_TOG, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
+            XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                        _______, XXXXXXX, _______,
                                                 _______, _______,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  KC_PSCR,
-                     G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  KC_SCRL,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
                      _______,   _______,
                      _______
      ),

@@ -187,7 +187,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             XXXXXXX,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
             TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
             TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                                USRNAME, _______,
+                                                 USRNAME, _______,
 
                      _______, _______,  _______, _______, _______, _______,
                      KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , KC_MINS,
@@ -215,15 +215,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            _______, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
-            _______, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
-            _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
+            XXXXXXX, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            NV_TSCR, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
+            XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                                 XXXXXXX, _______,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  KC_PSCR,
-                     G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  KC_SCRL,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
                      _______,   _______
      ),
 
@@ -266,7 +266,7 @@ const uint16_t PROGMEM combo_m_comm[] = {HRM_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
-    COMBO(combo_fg, TOGGLE_SCROLL),
+    COMBO(combo_fg, TOGGLE_SCROLL), // NV_TSCR
 #if defined(REPEAT_KEY_ENABLE) && !defined(NO_ALT_REPEAT_KEY)
     COMBO(combo_hj, QK_AREP),
 #endif
