@@ -112,7 +112,6 @@ enum keycode_aliases {
     HRM_V   = LT(SYM, KC_V),
 
     // EXT
-    HRM_B   = LT(EXT, KC_B),        // aim mode
     HRM_G   = LT(EXT, KC_G),        // EXT
     HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
 
@@ -160,7 +159,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
             KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
             HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
-            SWIME,    KC_Z,  KC_X,  KC_C,  HRM_V,   HRM_B,
+            SWIME,    KC_Z,  KC_X,  KC_C,  HRM_V,   KC_B,
                                            OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
@@ -184,7 +183,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        */
     [SYM] = LAYOUT_LR(
             _______,  _______, _______, _______, _______, _______,
-            XXXXXXX,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            KC_BSLS,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
             TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
             TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
                                                  USRNAME, _______,
@@ -199,9 +198,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // mouse keycodes and those often used together
     [EXT] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            _______, _______, _______, _______, _______, _______,
-            _______, _______, _______, _______, _______, _______,
-            _______, _______, _______, _______, _______, _______,
+            NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            NV_TSCR, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                                 MS_BTN2, MS_BTN1,
 
                      _______, _______, _______, _______, _______, QK_LLCK,
@@ -215,7 +214,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            XXXXXXX, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            NV_TAIM, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             NV_TSCR, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                                 XXXXXXX, _______,
@@ -266,7 +265,7 @@ const uint16_t PROGMEM combo_m_comm[] = {HRM_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
-    COMBO(combo_fg, TOGGLE_SCROLL), // NV_TSCR
+    // COMBO(combo_fg, TOGGLE_SCROLL), // NV_TSCR
 #if defined(REPEAT_KEY_ENABLE) && !defined(NO_ALT_REPEAT_KEY)
     COMBO(combo_hj, QK_AREP),
 #endif
@@ -445,7 +444,6 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
-            case HRM_B:                     // aim mode
             case HRM_G:                     // LT(EXT)
             case HRM_UNDS:                  // drag scroll
                  return FLOW_TAP_TERM;      // 100ms
@@ -803,11 +801,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
     */
-
-    case HRM_B:
-      if (!record->tap.count)
-          navigator_aim = !!record->event.pressed;
-      break;
 
     case HRM_UNDS:
       if (process_tap(record, KC_UNDS))

@@ -128,7 +128,6 @@ enum keycode_aliases {
 
     HRM_V   = LT(SYM, KC_V),
 
-    HRM_B   = LT(0, KC_B), // hold for aim mode
     HRM_G   = LT(0, KC_G), // hold for drag scroll
 
     HRM_J    = RSFT_T(KC_J),
@@ -198,7 +197,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_ESC,  KC_1,  KC_2,  KC_3,   KC_4,    KC_5,
             KC_TAB,  KC_Q,  KC_W,  KC_E,   KC_R,    KC_T,
             KC_UNDS, HRM_A, HRM_S, HRM_D,  HRM_F,   HRM_G,
-            SWIME,   KC_Z,  KC_X,  KC_C,   HRM_V,   HRM_B,
+            SWIME,   KC_Z,  KC_X,  KC_C,   HRM_V,   KC_B,
                                    QK_REP, OSM_SFT, HRM_ENT,
                                            MS_BTN2, MS_BTN1,
 
@@ -224,7 +223,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        */
     [SYM] = LAYOUT_LR(
             _______,  _______, _______, _______, _______, _______,
-            XXXXXXX,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            KC_BSLS,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
             TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
             TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
                                        _______,  USRNAME, _______,
@@ -243,7 +242,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            XXXXXXX, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            SNP_TOG, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             DRG_TOG, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                        _______, XXXXXXX, _______,
@@ -342,7 +341,7 @@ const uint16_t PROGMEM combo_m_comm[] = {HRM_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
-    COMBO(combo_fg, DRG_TOG),
+    // COMBO(combo_fg, DRG_TOG),
 #if 0
     COMBO(combo_hj, QK_AREP),
 #endif
@@ -482,7 +481,6 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
 #ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
 #endif
-            case HRM_B:                     // aim mode
             case HRM_G:                     // drag scroll
                  return FLOW_TAP_TERM;      // 100ms
 
@@ -790,11 +788,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
     */
-
-    case HRM_B:
-      if (!record->tap.count)
-          charybdis_set_pointer_sniping_enabled(!!record->event.pressed);
-      break;
 
     case HRM_G:
       if (!record->tap.count)
