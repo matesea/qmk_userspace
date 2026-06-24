@@ -81,7 +81,6 @@ enum custom_keycodes {
 
   UPDIR, // input ../ per press
   KEYSTR_MIN = UPDIR,
-  USRNAME, // input username
   TMUXESC,  // c-a esc: copy mode
   TMUXPAST, // c-a ]  : paste in tmux
 
@@ -109,8 +108,6 @@ enum keycode_aliases {
     HRM_D   = LCTL_T(KC_D),
     HRM_F   = LSFT_T(KC_F),
 
-    HRM_V   = LT(SYM, KC_V),
-
     // EXT
     HRM_G   = LT(EXT, KC_G),        // EXT
     HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
@@ -120,7 +117,8 @@ enum keycode_aliases {
     HRM_L    = LALT_T(KC_L),
     HRM_SCLN = RGUI_T(KC_SCLN),
 
-    HRM_M   = LT(SYM, KC_M),
+    HRM_QUOT = LT(FN, KC_QUOT),
+
 #ifdef DIRECTION_LAYER_ENABLE
     HRM_COMM = LT(DIR, KC_COMM),
     HRM_DOT = LT(DIR, KC_DOT),
@@ -131,7 +129,7 @@ enum keycode_aliases {
 
     // HRM_REP  = LT(NAV, QK_REP),
     HRM_ENT  = LT(NAV, KC_ENT),
-    HRM_BSPC = LT(FN, KC_BSPC),
+    HRM_BSPC = LT(SYM, KC_BSPC),
 
     OSM_SFT  = OSM(MOD_LSFT),
 
@@ -156,44 +154,75 @@ bool process_detected_host_os_user(os_variant_t os) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
-            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
-            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
-            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
-            SWIME,    KC_Z,  KC_X,  KC_C,  HRM_V,   KC_B,
+            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,   KC_5,
+            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,   KC_T,
+            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,  HRM_G,
+            SWIME,    KC_Z,  KC_X,  KC_C,  KC_V,   KC_B,
                                            OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
-                        KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
-                        KC_N,     HRM_M, HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
+                        KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, HRM_QUOT,
+                        KC_N,     KC_M,  HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
                         HRM_BSPC, KC_SPC
     ),
 
       /* getreuer's symbol layer
-         ' < > - |
-         ! * / = &
-         ~ + [ ] %
+       \ ' < > - |
+       X ! * / = &
+       X ~ + [ ] %
                  X
 
-              ^ { } $ X
-              # ( ) ; "
-              @ : , . '
+              ^ { } $ X -
+              # ( ) ; " X
+              @ : , . ' \
               X
-         split symbol layer to two hands to reduce finger travel distance
-       */
     [SYM] = LAYOUT_LR(
             _______,  _______, _______, _______, _______, _______,
-            KC_BSLS,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            UPDIR,    KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
             TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
             TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
-                                                 USRNAME, _______,
+                                                 XXXXXXX, _______,
 
                      _______, _______,  _______, _______, _______, _______,
-                     KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , KC_MINS,
-                     KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, UPDIR,
-                     KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, KC_BSLS,
+                     KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW  , _______,
+                     KC_HASH, KC_LPRN,  KC_RPRN, KC_SCLN, KC_DQUO, _______,
+                     KC_AT,   KC_COLN,  KC_COMM, KC_DOT,  KC_QUOT, _______,
                      _______, _______
     ),
+
+    // right-hand side SYM layer
+    [SYM] = LAYOUT_LR(
+            _______, _______, _______, _______, _______, _______,
+            _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+            _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                                XXXXXXX, XXXXXXX,
+
+                     _______, _______,  _______, _______, _______,  _______,
+                     KC_CIRC, KC_LCBR,  KC_RCBR, KC_DLR,  ARROW,    _______,
+                     KC_HASH, KC_LPRN,  KC_RPRN, KC_GRV,  TMUXESC,  _______,
+                     KC_TILD, KC_LBRC,  KC_RBRC, UPDIR,   TMUXPAST, _______,
+                     _______, _______
+
+            ),
+    */
+
+    // left-hand side SYM layer
+    [SYM] = LAYOUT_LR(
+            _______,  _______, _______, _______, _______, _______,
+            XXXXXXX,  ARROW,   KC_CIRC, KC_LCBR, KC_RCBR, KC_DLR,
+            TMUXPAST, TMUXESC, KC_GRV,  KC_LPRN, KC_RPRN, KC_HASH,
+            XXXXXXX,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
+                                                 XXXXXXX, _______,
+
+                     _______, _______,  _______, _______, _______, _______,
+                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, KC_LSFT,  KC_LCTL, KC_LALT, KC_LGUI, _______,
+                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     _______, _______
+
+            ),
 
     // mouse keycodes and those often used together
     [EXT] = LAYOUT_LR(
@@ -203,10 +232,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                                 MS_BTN2, MS_BTN1,
 
-                     _______, _______, _______, _______, _______, QK_LLCK,
-                     _______, _______, _______, _______, _______, _______,
-                     _______, _______, _______, _______, _______, _______,
-                     _______, _______, _______, _______, _______, _______,
+                     XXXXXXX, NV_CPID, NV_CPIU, XXXXXXX, XXXXXXX, QK_LLCK,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                      _______, _______
             ),
 
@@ -236,7 +265,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______, _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, _______,
-                     XXXXXXX, NV_CPID, NV_CPIU, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______
             ),
 
@@ -258,10 +287,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #if defined(COMBO_ENABLE)
-const uint16_t PROGMEM combo_cv[] = {KC_C, HRM_V, COMBO_END};
+const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM combo_fg[] = {HRM_F, HRM_G, COMBO_END};
 const uint16_t PROGMEM combo_hj[] = {KC_H, HRM_J, COMBO_END};
-const uint16_t PROGMEM combo_m_comm[] = {HRM_M, HRM_COMM, COMBO_END};
+const uint16_t PROGMEM combo_m_comm[] = {KC_V, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
@@ -269,7 +298,7 @@ combo_t key_combos[] = {
 #if defined(REPEAT_KEY_ENABLE) && !defined(NO_ALT_REPEAT_KEY)
     COMBO(combo_hj, QK_AREP),
 #endif
-    COMBO(combo_m_comm, SWIME),
+    // COMBO(combo_m_comm, SWIME),
 };
 #endif /* COMBO_ENABLE */
 
@@ -277,7 +306,6 @@ combo_t key_combos[] = {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_F: case HRM_J:
-        case HRM_M: case HRM_V:
             return TAPPING_TERM - 70; /* 180ms */
     }
     return TAPPING_TERM; /* 250ms */
@@ -303,6 +331,7 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_ENT:
+        case HRM_BSPC:
             return true;
     }
     return false;
@@ -321,10 +350,6 @@ uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t* record) {
     case HRM_L:
     case HRM_ENT:
     case HRM_BSPC:
-#ifdef DIRECTION_LAYER_ENABLE
-    case HRM_COMM:
-    case HRM_DOT:
-#endif
       return QUICK_TAP_TERM;  // Enable key repeating.
   }
   return 0;
@@ -396,7 +421,7 @@ bool get_chordal_hold(
             switch (other_keycode) {
                 // mouse keys
                 case KC_C:
-                case HRM_V:
+                case KC_V:
                     return true;
             }
             break;
@@ -452,6 +477,7 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
                  if (isMacOS)
                      return FLOW_TAP_TERM;  // 100ms
             case HRM_S: case HRM_L:         // alt
+            case HRM_QUOT:                  // FN
                 return FLOW_TAP_TERM + 50;  // 150ms
         }
     }
@@ -477,7 +503,8 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
     // letters are excluded, e.g. for "NN" and "ZZ" in Vim.
     // NN, SS, ZZ are excluded
     switch (keycode) {
-      case KC_A ... KC_Y:
+        case KC_A ... KC_M:
+        case KC_O ...KC_Y:
         if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
             *remembered_mods &= ~MOD_MASK_SHIFT;
         }
@@ -524,7 +551,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 #define TAP_LONG_DELAY 10
 static const struct keystring_t keystrings[] = {
     [UPDIR - KEYSTR_MIN]     = {"../"},
-    [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
     [TMUXESC - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_ESC)},
     [TMUXPAST - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_RBRC)},
 };
@@ -608,9 +634,7 @@ static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, 
 // layer mask for which layers APPPREV/APPNEXT on
 #define SWAPP_LAYER_MASK ((1 << NAV))
 layer_state_t layer_state_set_user(layer_state_t state) {
-#define max(x, y) ((x) > (y) ? (x) : (y))
-    // LED indicates SYM or above layer is on
-    uint8_t layer = max(get_highest_layer(state), SYM - 1) + 1 - SYM;
+    uint8_t layer = get_highest_layer(state);
     // release swapp_mod when the layer is released
     if (swapp_mod && !(state & SWAPP_LAYER_MASK)) {
         unregister_mods(swapp_mod);
@@ -829,17 +853,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         /* cancel OSM shift/auto mouse layer with BSPC */
         case HRM_BSPC:
             if (record->tap.count && record->event.pressed) {
+                bool handled = false;
                 if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
                     del_oneshot_mods(MOD_MASK_SHIFT);
-                    return false;
+                    handled = true;
                 }
 #ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
                 if (layer_state_is(EXT) && !is_layer_locked(EXT)) {
                     // automouse_deactivate();
                     layer_off(EXT);
-                    return false;
+                    handled = true;
                 }
 #endif
+                if (handled)
+                    return false;
             }
             break;
 #endif
