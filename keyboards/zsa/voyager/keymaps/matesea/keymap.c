@@ -94,9 +94,9 @@ struct keystring_t {
 enum {
     QWERTY = 0,
     SYM,
-    EXT,
     NAV,
-    FN,
+    EXT,
+    // FN,
 #ifdef DIRECTION_LAYER_ENABLE
     DIR,
 #endif
@@ -117,8 +117,7 @@ enum keycode_aliases {
     HRM_L    = LALT_T(KC_L),
     HRM_SCLN = RGUI_T(KC_SCLN),
 
-    HRM_QUOT = LT(FN, KC_QUOT),
-
+    // HRM_QUOT = LT(FN, KC_QUOT),
 #ifdef DIRECTION_LAYER_ENABLE
     HRM_COMM = LT(DIR, KC_COMM),
     HRM_DOT = LT(DIR, KC_DOT),
@@ -162,7 +161,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
-                        KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, HRM_QUOT,
+                        KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
                         KC_N,     KC_M,  HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
                         HRM_BSPC, KC_SPC
     ),
@@ -210,11 +209,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     // left-hand side SYM layer
     [SYM] = LAYOUT_LR(
-            _______,  _______, _______, _______, _______, _______,
+            XXXXXXX,  KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
             XXXXXXX,  ARROW,   KC_CIRC, KC_LCBR, KC_RCBR, KC_DLR,
             TMUXPAST, TMUXESC, KC_GRV,  KC_LPRN, KC_RPRN, KC_HASH,
-            XXXXXXX,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
-                                                 XXXXXXX, _______,
+            CW_TOGG,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
+                                                 XXXXXXX, KC_ENT,
 
                      _______, _______,  _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
@@ -225,6 +224,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             ),
 
     // mouse keycodes and those often used together
+    /*
     [EXT] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
             NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -238,6 +238,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                      _______, _______
             ),
+    */
 
     // shortcuts that can be done with one-hand
     // navigation layer
@@ -245,16 +246,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, _______, _______, _______, _______, _______,
             NV_TAIM, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             NV_TSCR, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
-            XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
+            CW_TOGG, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                                 XXXXXXX, _______,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
-                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
-                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
+                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  XXXXXXX,
+                     G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  XXXXXXX,
                      _______,   _______
      ),
 
+    /*
     [FN] = LAYOUT_LR(
             QK_LLCK, KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
             QK_BOOT, KC_F12,  KC_F9,   KC_F8,   KC_F7,   DB_TOGG,
@@ -267,6 +269,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______
+            ),
+    */
+
+    [EXT] = LAYOUT_LR(
+            _______, _______, _______, _______, _______, _______,
+            NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            NV_TSCR, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                                MS_BTN2, MS_BTN1,
+
+                     QK_RBT,  NV_CPID, NV_CPIU, XXXXXXX, QK_BOOT, QK_LLCK,
+                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  KC_BRK,
+                     LUMINO,  KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_PSCR,
+                     RGBHRND, KC_F1,   KC_F2,   KC_F3,   KC_F10,  KC_SCRL,
+                     KC_BSPC, KC_SPC
             ),
 
 #ifdef DIRECTION_LAYER_ENABLE
@@ -331,7 +348,6 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_ENT:
-        case HRM_BSPC:
             return true;
     }
     return false;
@@ -477,7 +493,6 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
                  if (isMacOS)
                      return FLOW_TAP_TERM;  // 100ms
             case HRM_S: case HRM_L:         // alt
-            case HRM_QUOT:                  // FN
                 return FLOW_TAP_TERM + 50;  // 150ms
         }
     }
