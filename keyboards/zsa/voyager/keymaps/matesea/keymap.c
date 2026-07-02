@@ -153,10 +153,10 @@ bool process_detected_host_os_user(os_variant_t os) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
-            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,   KC_5,
-            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,   KC_T,
-            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,  HRM_G,
-            SWIME,    KC_Z,  KC_X,  KC_C,  KC_V,   KC_B,
+            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
+            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
+            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
+            SWIME,    KC_Z,  KC_X,  KC_C,  KC_V,    KC_B,
                                            OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
@@ -213,7 +213,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             XXXXXXX,  ARROW,   KC_CIRC, KC_LCBR, KC_RCBR, KC_DLR,
             TMUXPAST, TMUXESC, KC_GRV,  KC_LPRN, KC_RPRN, KC_HASH,
             CW_TOGG,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
-                                                 XXXXXXX, KC_ENT,
+                                                 KC_SPC,  KC_ENT,
 
                      _______, _______,  _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
@@ -276,10 +276,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, _______, _______, _______, _______, _______,
             NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
             NV_TSCR, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
-            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            NV_VSCR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                                 MS_BTN2, MS_BTN1,
 
-                     QK_RBT,  NV_CPID, NV_CPIU, XXXXXXX, QK_BOOT, QK_LLCK,
+                     QK_RBT,  NV_CPID, NV_CPIU, NV_CSPD, QK_BOOT, QK_LLCK,
                      DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  KC_BRK,
                      LUMINO,  KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_PSCR,
                      RGBHRND, KC_F1,   KC_F2,   KC_F3,   KC_F10,  KC_SCRL,
@@ -398,11 +398,18 @@ static void lighting_preset(uint8_t effect, uint8_t palette) {
   rgb_matrix_mode_noeeprom(effect);
   rgb_matrix_set_speed_noeeprom(80);
 }
+#endif /* COMMUNITY_MODULE_PALETTEFX_ENABLE */
+
+extern bool set_scrolling;
+extern bool scroll_vertical_only;
 
 void keyboard_post_init_user(void) {
-  lighting_preset(RGB_MATRIX_CUSTOM_PALETTEFX_FLOW + (myrand() % 4), myrand());
+#ifdef COMMUNITY_MODULE_PALETTEFX_ENABLE
+  lighting_preset(RGB_MATRIX_COMMUNITY_MODULE_PALETTEFX_FLOW + (myrand() % 4),
+          myrand());
+#endif
+  scroll_vertical_only = true;
 }
-#endif /* COMMUNITY_MODULE_PALETTEFX_ENABLE */
 
 #ifdef CHORDAL_HOLD
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
@@ -622,9 +629,6 @@ void oneshot_mods_changed_user(uint8_t mods) {
     STATUS_LED_4(!!(mods & MOD_MASK_SHIFT));
 }
 #endif
-
-extern bool set_scrolling;
-extern bool navigator_aim;
 
 /*****
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
@@ -928,7 +932,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef COMMUNITY_MODULE_PALETTEFX_ENABLE
         case RGBHRND:
-          lighting_preset(RGB_MATRIX_CUSTOM_PALETTEFX_FLOW + (myrand() % 4), myrand());
+          lighting_preset(RGB_MATRIX_COMMUNITY_MODULE_PALETTEFX_FLOW +
+                  (myrand() % 4), myrand());
           return false;
 #endif /* COMMUNITY_MODULE_PALETTEFX_ENABLE */
     }
