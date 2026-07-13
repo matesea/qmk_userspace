@@ -4,7 +4,6 @@
 
 #define MOON_LED_LEVEL LED_LEVEL
 #define ML_SAFE_RANGE SAFE_RANGE
-#define DIRECTION_LAYER_ENABLE
 
 enum custom_keycodes {
   ARROW = ML_SAFE_RANGE,    // -> =>
@@ -20,7 +19,6 @@ enum custom_keycodes {
   CD,
   CF,
 
-#ifdef DIRECTION_LAYER_ENABLE
   /* vim navigation */
   /* the LBRC/RBRC keys must be both defined and in same order */
   /* shift + RBRC_* = LBRC_* */
@@ -77,7 +75,6 @@ enum custom_keycodes {
   RBRC_X,
   RBRC_Y,
   RBRC_Z,
-#endif /* DIRECTION_LAYER_ENABLE */
 
   UPDIR, // input ../ per press
   KEYSTR_MIN = UPDIR,
@@ -97,9 +94,7 @@ enum {
     NAV,
     EXT,
     // FN,
-#ifdef DIRECTION_LAYER_ENABLE
     DIR,
-#endif
 };
 
 enum keycode_aliases {
@@ -110,7 +105,7 @@ enum keycode_aliases {
 
     // EXT
     HRM_G   = LT(EXT, KC_G),        // EXT
-    HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
+    // HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
@@ -118,13 +113,8 @@ enum keycode_aliases {
     HRM_SCLN = RGUI_T(KC_SCLN),
 
     // HRM_QUOT = LT(FN, KC_QUOT),
-#ifdef DIRECTION_LAYER_ENABLE
     HRM_COMM = LT(DIR, KC_COMM),
-    HRM_DOT = LT(DIR, KC_DOT),
-#else
-    HRM_COMM = KC_COMM,
-    HRM_DOT = KC_DOT,
-#endif
+    HRM_DOT  = LT(DIR, KC_DOT),
 
     // HRM_REP  = LT(NAV, QK_REP),
     HRM_ENT  = LT(NAV, KC_ENT),
@@ -153,11 +143,11 @@ bool process_detected_host_os_user(os_variant_t os) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
-            KC_ESC,   KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
-            KC_TAB,   KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
-            HRM_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
-            SWIME,    KC_Z,  KC_X,  KC_C,  KC_V,    KC_B,
-                                           OSM_SFT, HRM_ENT,
+            KC_ESC,  KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
+            KC_TAB,  KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
+            KC_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
+            SWIME,   KC_Z,  KC_X,  KC_C,  KC_V,    KC_B,
+                                          OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
@@ -246,13 +236,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             _______, _______, _______, _______, _______, _______,
             NV_TAIM, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             NV_TSCR, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
-            CW_TOGG, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
-                                                XXXXXXX, _______,
+            XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
+                                                XXXXXXX, KC_ENT,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, KC_DEL,  XXXXXXX,
-                     G(KC_TAB), APPPREV, APPNEXT, XXXXXXX, KC_APP,  XXXXXXX,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, XXXXXXX,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  XXXXXXX,
                      _______,   _______
      ),
 
@@ -272,6 +262,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             ),
     */
 
+
+    /* navigator + function keys
+     * NV_TAIM: TOGGLE_AIM
+     * NV_TSCR: TOGGLE_SCROLL
+     * NV_VSCR: TOGGLE_SCROLL_VERTICAL
+     * NV_CPID: NAVIGATOR_DEC_CPI
+     * NV_CPIU: NAVIGATOR_INC_CPI
+     * NV_CSPD: NAVIGATOR_CLEAR_SPEED
+     */
     [EXT] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
             NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -286,7 +285,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      KC_BSPC, KC_SPC
             ),
 
-#ifdef DIRECTION_LAYER_ENABLE
     [DIR] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
             XXXXXXX, RBRC_Q,  RBRC_W,  RBRC_E,  RBRC_R,  RBRC_T,
@@ -300,7 +298,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______
             ),
-#endif /* DIRECTION_LAYER_ENABLE */
 };
 
 #if defined(COMBO_ENABLE)
@@ -348,6 +345,7 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_ENT:
+        case HRM_BSPC:
             return true;
     }
     return false;
@@ -466,7 +464,7 @@ static bool is_typing(uint16_t keycode) {
       case SWIME:
       case KC_BSLS:
       case KC_MINS:
-      // case KC_UNDS: // XXX: get_tap_keycode(HRM_UNDS) returns KC_MINS
+      case KC_UNDS: // XXX: get_tap_keycode(HRM_UNDS) returns KC_MINS
       // thumb
       case KC_SPC:
       // case KC_BSPC:
@@ -489,11 +487,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
             // case HRM_D: case HRM_K: // ctrl
             //    return FLOW_TAP_TERM - 40; // 60ms
 
-#ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
-#endif
             case HRM_G:                     // LT(EXT)
-            case HRM_UNDS:                  // drag scroll
                  return FLOW_TAP_TERM;      // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
@@ -533,9 +528,7 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
         break;
 
       case MS_BTN1 ... MS_BTN2: // no need to remember any modifiers for mouse keys
-#ifdef DIRECTION_LAYER_ENABLE
       case LBRC_A ... RBRC_Z:
-#endif
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
         break;
@@ -555,14 +548,11 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
         }
     } else if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
-#ifdef DIRECTION_LAYER_ENABLE
             /* reverse vim navigation */
             case LBRC_A ... LBRC_Z:
                 return keycode - LBRC_A + RBRC_A;
-
             case RBRC_A ... RBRC_Z:
                 return keycode - RBRC_A + LBRC_A;
-#endif
         }
     }
     return KC_TRNS;
@@ -630,24 +620,6 @@ void oneshot_mods_changed_user(uint8_t mods) {
 }
 #endif
 
-/*****
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-void pointing_device_init_user(void) {
-    set_auto_mouse_layer(EXT);
-    set_auto_mouse_enable(true);
-}
-bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
-  // Treat all keys as mouse keys when in the automouse layer so that any key set resets the timeout without leaving the layer.
-  if (!layer_state_is(AUTO_MOUSE_TARGET_LAYER)){
-    // When depressing a mouse key with a LT key at the same time, the mouse key tracker is not decremented.
-    // This is a workaround to fix that
-    return (IS_MOUSE_KEYCODE(keycode) && !record->event.pressed);
-  }
-  return false;
-}
-#endif // POINTING_DEVICE_AUTO_MOUSE_ENABLE
-*****/
-
 static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, gui for MAC
 
 // layer mask for which layers APPPREV/APPNEXT on
@@ -660,12 +632,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         wait_ms(TAP_CODE_DELAY);
         swapp_mod = 0;
     }
-#ifndef NO_ACTION_ONESHOT
-    // automatically cancel oneshot shift in non-typing layer
-    if ((get_oneshot_mods() & MOD_MASK_SHIFT) && layer > QWERTY) {
-        del_oneshot_mods(MOD_MASK_SHIFT);
-    }
-#endif
 #if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
     STATUS_LED_1(layer & (1 << 0));
     STATUS_LED_2(layer & (1 << 1));
@@ -673,28 +639,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #endif
     return state;
 }
-
-#ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
-/**********************
-   similar to is_mouse_record_user for auto mouse feature
-   but for automouse module
-**********************/
-static bool stay_mouse_layer(uint16_t keycode, keyrecord_t *record) {
-    if (is_layer_locked(EXT) || keycode == QK_LLCK)
-        return true;
-    if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode)))
-        return true;
-    // stay in mouse layer while modifiers at left hand side are held
-    switch (keycode) {
-        case HRM_A:
-        case HRM_S:
-        case HRM_D:
-        case HRM_F:
-            return record->event.pressed;
-    }
-    return false;
-}
-#endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
@@ -721,12 +665,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
-#ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
-  if (layer_state_is(EXT) && !stay_mouse_layer(keycode, record)) {
-      layer_off(EXT);
-      // automouse_deactivate();
+  // automatically clear one-shot shift
+  if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
+      switch (get_tap_keycode(keycode)) {
+          case KC_A ... KC_0:
+          case KC_MINS ... KC_SLSH:
+              break;
+          case KC_BSPC:
+              // clear one-shot shift without processing backspace key
+              if (record->tap.count) {
+                  del_oneshot_mods(MOD_MASK_SHIFT);
+                  return false;
+              }
+              break;
+          default:
+              del_oneshot_mods(MOD_MASK_SHIFT);
+      }
   }
-#endif
 
 #if 0
   // XXX: import from oryx
@@ -821,11 +776,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
              return false;
          break;
 
-#ifdef DIRECTION_LAYER_ENABLE
     case HRM_COMM:
          add_mod_when_held(record, MOD_BIT_LSHIFT);
          break;
-#endif
 
     case C(KC_A) ... C(KC_Z):
         // convert ctrl-<key> shortcuts to gui-<key> on MacOS
@@ -843,17 +796,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
         break;
-    */
 
     case HRM_UNDS:
       if (process_tap(record, KC_UNDS))
             return false;
       set_scrolling = !!record->event.pressed;
       break;
+    */
+    case HRM_ENT:
+        if (!record->tap.count)
+            set_scrolling = !!record->event.pressed;
+        break;
   }
 
   if (record->event.pressed) {
-#ifdef DIRECTION_LAYER_ENABLE
     // opposite directional movement when shift pressed
     if (all_mods & MOD_MASK_SHIFT) {
         switch (keycode) {
@@ -865,31 +821,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               break;
         }
     }
-#endif /* DIRECTION_LAYER_ENABLE */
 
     switch (keycode) {
-#if !defined(NO_ACTION_ONESHOT) || defined(COMMUNITY_MODULE_AUTOMOUSE_ENABLE)
-        /* cancel OSM shift/auto mouse layer with BSPC */
-        case HRM_BSPC:
-            if (record->tap.count && record->event.pressed) {
-                bool handled = false;
-                if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    handled = true;
-                }
-#ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
-                if (layer_state_is(EXT) && !is_layer_locked(EXT)) {
-                    // automouse_deactivate();
-                    layer_off(EXT);
-                    handled = true;
-                }
-#endif
-                if (handled)
-                    return false;
-            }
-            break;
-#endif
-
         case ARROW:
           clear_mods();
           SEND_STRING((all_mods & MOD_MASK_CTRL) ?
@@ -902,7 +835,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           set_mods(mods);
           return false;
 
-#ifdef DIRECTION_LAYER_ENABLE
         case LBRC_A ... LBRC_Z:
           {
               const char buf[] = {'[', (keycode - LBRC_A) + 'a', '\0'};
@@ -920,7 +852,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               return false;
           }
 
-#endif /* DIRECTION_LAYER_ENABLE */
         case UPDIR ... TMUXPAST:
           {
               const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
