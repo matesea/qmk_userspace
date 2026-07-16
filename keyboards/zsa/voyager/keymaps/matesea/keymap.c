@@ -205,11 +205,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             CW_TOGG,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
                                                  KC_SPC,  KC_ENT,
 
-                     _______, _______,  _______, _______, _______, _______,
-                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
-                     XXXXXXX, KC_LSFT,  KC_LCTL, KC_LALT, KC_LGUI, _______,
-                     XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, _______,
-                     _______, _______
+                     _______, _______, _______, _______, _______, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     KC_BSPC, KC_SPC
 
             ),
 
@@ -243,7 +243,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
                      KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, XXXXXXX,
                      G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  XXXXXXX,
-                     _______,   _______
+                     KC_BSPC,   KC_SPC
      ),
 
     /*
@@ -345,7 +345,6 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_ENT:
-        case HRM_BSPC:
             return true;
     }
     return false;
@@ -527,7 +526,6 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
         }
         break;
 
-      case MS_BTN1 ... MS_BTN2: // no need to remember any modifiers for mouse keys
       case LBRC_A ... RBRC_Z:
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
@@ -613,7 +611,7 @@ __attribute__((weak)) bool add_mod_when_held(keyrecord_t *record, uint8_t mod) {
     return true;
 }
 
-#if  defined(STATUS_LED_4) && !defined(NO_ACTION_ONESHOT)
+#if defined(STATUS_LED_4) && !defined(NO_ACTION_ONESHOT)
 // LED 4 indicate OSM_SFT status
 void oneshot_mods_changed_user(uint8_t mods) {
     STATUS_LED_4(!!(mods & MOD_MASK_SHIFT));
@@ -665,6 +663,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
+#ifndef NO_ACTION_ONESHOT
   // automatically clear one-shot shift
   if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
       switch (get_tap_keycode(keycode)) {
@@ -672,16 +671,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           case KC_MINS ... KC_SLSH:
               break;
           case KC_BSPC:
-              // clear one-shot shift without processing backspace key
-              if (record->tap.count) {
-                  del_oneshot_mods(MOD_MASK_SHIFT);
+              // delete oneshot shift regardless of hold/tap
+              del_oneshot_mods(MOD_MASK_SHIFT);
+              // if this is tap key, stop further processing
+              if (record->tap.count)
                   return false;
-              }
               break;
           default:
               del_oneshot_mods(MOD_MASK_SHIFT);
       }
   }
+#endif
 
 #if 0
   // XXX: import from oryx
