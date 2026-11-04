@@ -103,16 +103,13 @@ enum keycode_aliases {
     HRM_D   = LCTL_T(KC_D),
     HRM_F   = LSFT_T(KC_F),
 
-    // EXT
-    HRM_G   = LT(EXT, KC_G),        // EXT
-    // HRM_UNDS = LT(EXT, KC_UNDS),    // drag scroll
+    HRM_G   = LT(EXT, KC_G),
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
     HRM_L    = LALT_T(KC_L),
     HRM_SCLN = RGUI_T(KC_SCLN),
 
-    // HRM_QUOT = LT(FN, KC_QUOT),
     HRM_COMM = LT(DIR, KC_COMM),
     HRM_DOT  = LT(DIR, KC_DOT),
 
@@ -304,7 +301,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM combo_fg[] = {HRM_F, HRM_G, COMBO_END};
 const uint16_t PROGMEM combo_hj[] = {KC_H, HRM_J, COMBO_END};
-const uint16_t PROGMEM combo_m_comm[] = {KC_V, HRM_COMM, COMBO_END};
+const uint16_t PROGMEM combo_m_comm[] = {KC_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
@@ -312,7 +309,7 @@ combo_t key_combos[] = {
 #if defined(REPEAT_KEY_ENABLE) && !defined(NO_ALT_REPEAT_KEY)
     COMBO(combo_hj, QK_AREP),
 #endif
-    // COMBO(combo_m_comm, SWIME),
+    COMBO(combo_m_comm, SWIME),
 };
 #endif /* COMBO_ENABLE */
 
@@ -551,6 +548,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             /* reverse vim navigation */
             case LBRC_A ... LBRC_Z:
                 return keycode - LBRC_A + RBRC_A;
+
             case RBRC_A ... RBRC_Z:
                 return keycode - RBRC_A + LBRC_A;
         }
@@ -620,23 +618,27 @@ void oneshot_mods_changed_user(uint8_t mods) {
 }
 #endif
 
+
 static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, gui for MAC
 
 // layer mask for which layers APPPREV/APPNEXT on
 #define SWAPP_LAYER_MASK ((1 << NAV))
 layer_state_t layer_state_set_user(layer_state_t state) {
+#if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
     uint8_t layer = get_highest_layer(state);
+
+    STATUS_LED_1(layer & (1 << 0));
+    STATUS_LED_2(layer & (1 << 1));
+    STATUS_LED_3(layer & (1 << 2));
+#endif
+
     // release swapp_mod when the layer is released
     if (swapp_mod && !(state & SWAPP_LAYER_MASK)) {
         unregister_mods(swapp_mod);
         wait_ms(TAP_CODE_DELAY);
         swapp_mod = 0;
     }
-#if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
-    STATUS_LED_1(layer & (1 << 0));
-    STATUS_LED_2(layer & (1 << 1));
-    STATUS_LED_3(layer & (1 << 2));
-#endif
+
     return state;
 }
 
@@ -798,13 +800,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
         break;
-
-    case HRM_UNDS:
-      if (process_tap(record, KC_UNDS))
-            return false;
-      set_scrolling = !!record->event.pressed;
-      break;
     */
+
     case HRM_ENT:
         if (!record->tap.count)
             set_scrolling = !!record->event.pressed;

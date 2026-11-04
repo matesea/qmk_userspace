@@ -21,7 +21,6 @@
 #    include "timer.h"
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-#define DIRECTION_LAYER_ENABLE
 
 enum custom_keycodes {
   ARROW = SAFE_RANGE,    // -> =>
@@ -37,7 +36,6 @@ enum custom_keycodes {
   CD,
   CF,
 
-#ifdef DIRECTION_LAYER_ENABLE
   /* vim navigation */
   /* the LBRC/RBRC keys must be both defined and in same order */
   /* shift + RBRC_* = LBRC_* */
@@ -94,11 +92,9 @@ enum custom_keycodes {
   RBRC_X,
   RBRC_Y,
   RBRC_Z,
-#endif /* DIRECTION_LAYER_ENABLE */
 
   UPDIR, // input ../ per press
   KEYSTR_MIN = UPDIR,
-  USRNAME, // input username
   TMUXESC,  // c-a esc: copy mode
   TMUXPAST, // c-a ]  : paste in tmux
 
@@ -112,12 +108,10 @@ struct keystring_t {
 enum {
     QWERTY = 0,
     SYM,
-    // EXT,
     NAV,
-    FN,
-#ifdef DIRECTION_LAYER_ENABLE
+    EXT,
+    // FN,
     DIR,
-#endif
 };
 
 enum keycode_aliases {
@@ -126,27 +120,19 @@ enum keycode_aliases {
     HRM_D   = LCTL_T(KC_D),
     HRM_F   = LSFT_T(KC_F),
 
-    HRM_V   = LT(SYM, KC_V),
-
-    HRM_G   = LT(0, KC_G), // hold for drag scroll
+    HRM_G   = LT(EXT, KC_G),
 
     HRM_J    = RSFT_T(KC_J),
     HRM_K    = RCTL_T(KC_K),
     HRM_L    = LALT_T(KC_L),
     HRM_SCLN = RGUI_T(KC_SCLN),
 
-    HRM_M   = LT(SYM, KC_M),
-#ifdef DIRECTION_LAYER_ENABLE
     HRM_COMM = LT(DIR, KC_COMM),
     HRM_DOT = LT(DIR, KC_DOT),
-#else
-    HRM_COMM = KC_COMM,
-    HRM_DOT = KC_DOT,
-#endif
 
     // HRM_REP  = LT(NAV, QK_REP),
     HRM_ENT  = LT(NAV, KC_ENT),
-    HRM_BSPC = LT(FN, KC_BSPC),
+    HRM_BSPC = LT(SYM, KC_BSPC),
 
     OSM_SFT  = OSM(MOD_LSFT),
 
@@ -191,39 +177,37 @@ bool process_detected_host_os_user(os_variant_t os) {
     return true;
 }
 #endif /* OS_DETECTION_ENABLE */
-// clang-format off
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
             KC_ESC,  KC_1,  KC_2,  KC_3,   KC_4,    KC_5,
             KC_TAB,  KC_Q,  KC_W,  KC_E,   KC_R,    KC_T,
             KC_UNDS, HRM_A, HRM_S, HRM_D,  HRM_F,   HRM_G,
-            SWIME,   KC_Z,  KC_X,  KC_C,   HRM_V,   KC_B,
+            SWIME,   KC_Z,  KC_X,  KC_C,   KC_V,    KC_B,
                                    QK_REP, OSM_SFT, HRM_ENT,
                                            MS_BTN2, MS_BTN1,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
                         KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
-                        KC_N,     HRM_M, HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
+                        KC_N,     KC_M, HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
                         HRM_BSPC, KC_SPC,
                         QK_AREP
     ),
 
       /* getreuer's symbol layer
-         ' < > - |
-         ! * / = &
-         ~ + [ ] %
+       \ ' < > - |
+       X ! * / = &
+       X ~ + [ ] %
                  X
 
-              ^ { } $ X
-              # ( ) ; "
-              @ : , . '
+              ^ { } $ X -
+              # ( ) ; " X
+              @ : , . ' \
               X
-         split symbol layer to two hands to reduce finger travel distance
-       */
     [SYM] = LAYOUT_LR(
             _______,  _______, _______, _______, _______, _______,
-            KC_BSLS,  KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
+            UPDIR,    KC_GRV , KC_LABK, KC_RABK, KC_MINS, KC_PIPE,
             TMUXESC,  KC_EXLM, KC_ASTR, KC_SLSH, KC_EQL,  KC_AMPR,
             TMUXPAST, KC_TILD, KC_PLUS, KC_LBRC, KC_RBRC, KC_PERC,
                                        _______,  USRNAME, _______,
@@ -236,7 +220,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______,
                      XXXXXXX
     ),
+    */
 
+    // left-hand side SYM layer
+    [SYM] = LAYOUT_LR(
+            XXXXXXX,  KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
+            XXXXXXX,  ARROW,   KC_CIRC, KC_LCBR, KC_RCBR, KC_DLR,
+            TMUXPAST, TMUXESC, KC_GRV,  KC_LPRN, KC_RPRN, KC_HASH,
+            CW_TOGG,  UPDIR,   KC_TILD, KC_LBRC, KC_RBRC, KC_PERC,
+                                        _______, KC_SPC,  KC_ENT,
+                                                 _______, _______,
+
+                     _______, _______, _______, _______, _______, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     KC_BSPC, KC_SPC,
+                     _______
+            ),
 
     // shortcuts that can be done with one-hand
     // navigation layer
@@ -245,17 +246,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             SNP_TOG, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
             DRG_TOG, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
-                                       _______, XXXXXXX, _______,
+                                       _______, XXXXXXX, KC_ENT,
                                                 _______, _______,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
-                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
-                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
-                     _______,   _______,
+                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, XXXXXXX,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  XXXXXXX,
+                     KC_BSPC,   KC_SPC,
                      _______
      ),
 
+    /*
     [FN] = LAYOUT_LR(
             QK_LLCK, KC_MPLY, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
             QK_BOOT, KC_F12,  KC_F9,   KC_F8,   KC_F7,   DB_TOGG,
@@ -269,10 +271,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      XXXXXXX,  KC_LSFT,  KC_LCTL, KC_LALT, KC_LGUI, _______,
                      S_D_RMOD, DPI_RMOD, DPI_MOD, S_D_MOD, XXXXXXX, _______,
                      _______, _______,
+            ),
+    */
+
+    [EXT] = LAYOUT_LR(
+            _______, _______, _______, _______, _______, _______,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                                       XXXXXXX, XXXXXXX, XXXXXXX,
+                                                XXXXXXX, XXXXXXX,
+
+                     QK_RBT,  XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, QK_LLCK,
+                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  KC_BRK,
+                     XXXXXXX, KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_PSCR,
+                     XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F10,  KC_SCRL,
+                     KC_BSPC, KC_SPC,
                      _______
             ),
 
-#ifdef DIRECTION_LAYER_ENABLE
     [DIR] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
             XXXXXXX, RBRC_Q,  RBRC_W,  RBRC_E,  RBRC_R,  RBRC_T,
@@ -288,7 +305,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______,
                      _______
             ),
-#endif /* DIRECTION_LAYER_ENABLE */
 
 };
 // clang-format on
@@ -334,10 +350,10 @@ void rgb_matrix_update_pwm_buffers(void);
 #endif
 
 #if defined(COMBO_ENABLE)
-const uint16_t PROGMEM combo_cv[] = {KC_C, HRM_V, COMBO_END};
+const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
 const uint16_t PROGMEM combo_fg[] = {HRM_F, HRM_G, COMBO_END};
 const uint16_t PROGMEM combo_hj[] = {KC_H, HRM_J, COMBO_END};
-const uint16_t PROGMEM combo_m_comm[] = {HRM_M, HRM_COMM, COMBO_END};
+const uint16_t PROGMEM combo_m_comm[] = {KC_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
@@ -353,7 +369,6 @@ combo_t key_combos[] = {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_F: case HRM_J:
-        case HRM_M: case HRM_V:
             return TAPPING_TERM - 70; /* 180ms */
     }
     return TAPPING_TERM; /* 250ms */
@@ -379,6 +394,7 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HRM_ENT:
+        case HRM_BSPC:
             return true;
     }
     return false;
@@ -395,12 +411,9 @@ uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t* record) {
     case HRM_J:
     case HRM_K:
     case HRM_L:
+    case HRM_DOT:
     case HRM_ENT:
     case HRM_BSPC:
-#ifdef DIRECTION_LAYER_ENABLE
-    case HRM_COMM:
-    case HRM_DOT:
-#endif
       return QUICK_TAP_TERM;  // Enable key repeating.
   }
   return 0;
@@ -434,6 +447,14 @@ bool get_chordal_hold(
                 // gui+E: explorer/gui+R: run
                 case KC_E:
                 case KC_R:
+                    return true;
+            }
+            break;
+        case HRM_Z:
+            switch (other_keycode) {
+                // mouse keys
+                case KC_C:
+                case KC_V:
                     return true;
             }
             break;
@@ -478,10 +499,8 @@ uint16_t get_flow_tap_term(uint16_t keycode, keyrecord_t* record,
             // case HRM_D: case HRM_K: // ctrl
             //    return FLOW_TAP_TERM - 40; // 60ms
 
-#ifdef DIRECTION_LAYER_ENABLE
             case HRM_COMM: case HRM_DOT:    // LT(DIR)
-#endif
-            case HRM_G:                     // drag scroll
+            case HRM_G:                     // LT(EXT)
                  return FLOW_TAP_TERM;      // 100ms
 
             case HRM_A: case HRM_SCLN:      // gui
@@ -513,16 +532,14 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
     // letters are excluded, e.g. for "NN" and "ZZ" in Vim.
     // NN, SS, ZZ are excluded
     switch (keycode) {
-      case KC_A ... KC_Y:
+        case KC_A ... KC_M:
+        case KC_O ...KC_Y:
         if ((*remembered_mods & ~(MOD_MASK_SHIFT | MOD_BIT(KC_RALT))) == 0) {
             *remembered_mods &= ~MOD_MASK_SHIFT;
         }
         break;
 
-      case MS_BTN1 ... MS_BTN2: // no need to remember any modifiers for mouse keys
-#ifdef DIRECTION_LAYER_ENABLE
       case LBRC_A ... RBRC_Z:
-#endif
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
         break;
@@ -542,14 +559,12 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
         }
     } else if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
-#ifdef DIRECTION_LAYER_ENABLE
             /* reverse vim navigation */
             case LBRC_A ... LBRC_Z:
                 return keycode - LBRC_A + RBRC_A;
 
             case RBRC_A ... RBRC_Z:
                 return keycode - RBRC_A + LBRC_A;
-#endif
         }
     }
     return KC_TRNS;
@@ -560,7 +575,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 #define TAP_LONG_DELAY 10
 static const struct keystring_t keystrings[] = {
     [UPDIR - KEYSTR_MIN]     = {"../"},
-    [USRNAME - KEYSTR_MIN]   = {"wenlongy"},
     [TMUXESC - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_ESC)},
     [TMUXPAST - KEYSTR_MIN]   = {SS_LCTL(SS_TAP(X_A)) SS_TAP(X_RBRC)},
 };
@@ -624,26 +638,21 @@ static uint8_t swapp_mod = 0; // record app switch mod key status, alt for WIN, 
 // layer mask for which layers APPPREV/APPNEXT on
 #define SWAPP_LAYER_MASK ((1 << NAV))
 layer_state_t layer_state_set_user(layer_state_t state) {
-#define max(x, y) ((x) > (y) ? (x) : (y))
-    // LED indicates SYM or above layer is on
-    uint8_t layer = max(get_highest_layer(state), SYM - 1) + 1 - SYM;
+#if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
+    uint8_t layer = get_highest_layer(state);
+
+    STATUS_LED_1(layer & (1 << 0));
+    STATUS_LED_2(layer & (1 << 1));
+    STATUS_LED_3(layer & (1 << 2));
+#endif
+
     // release swapp_mod when the layer is released
     if (swapp_mod && !(state & SWAPP_LAYER_MASK)) {
         unregister_mods(swapp_mod);
         wait_ms(TAP_CODE_DELAY);
         swapp_mod = 0;
     }
-#ifndef NO_ACTION_ONESHOT
-    // automatically cancel oneshot shift in non-typing layer
-    if ((get_oneshot_mods() & MOD_MASK_SHIFT) && layer > QWERTY) {
-        del_oneshot_mods(MOD_MASK_SHIFT);
-    }
-#endif
-#if defined(STATUS_LED_1) && defined(STATUS_LED_2) && defined(STATUS_LED_3)
-    STATUS_LED_1(layer & (1 << 0));
-    STATUS_LED_2(layer & (1 << 1));
-    STATUS_LED_3(layer & (1 << 2));
-#endif
+
     return state;
 }
 
@@ -671,6 +680,26 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         swapp_mod = 0;
     }
   }
+
+#ifndef NO_ACTION_ONESHOT
+  // automatically clear one-shot shift
+  if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
+      switch (get_tap_keycode(keycode)) {
+          case KC_A ... KC_0:
+          case KC_MINS ... KC_SLSH:
+              break;
+          case KC_BSPC:
+              // delete oneshot shift regardless of hold/tap
+              del_oneshot_mods(MOD_MASK_SHIFT);
+              // if this is tap key, stop further processing
+              if (record->tap.count)
+                  return false;
+              break;
+          default:
+              del_oneshot_mods(MOD_MASK_SHIFT);
+      }
+  }
+#endif
 
 #if 0
   // XXX: import from oryx
@@ -765,11 +794,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
              return false;
          break;
 
-#ifdef DIRECTION_LAYER_ENABLE
     case HRM_COMM:
          add_mod_when_held(record, MOD_BIT_LSHIFT);
          break;
-#endif
 
     case C(KC_A) ... C(KC_Z):
         // convert ctrl-<key> shortcuts to gui-<key> on MacOS
@@ -789,14 +816,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
     */
 
-    case HRM_G:
+    case HRM_ENT:
       if (!record->tap.count)
           charybdis_set_pointer_dragscroll_enabled(!!record->event.pressed);
       break;
   }
 
   if (record->event.pressed) {
-#ifdef DIRECTION_LAYER_ENABLE
     // opposite directional movement when shift pressed
     if (all_mods & MOD_MASK_SHIFT) {
         switch (keycode) {
@@ -808,28 +834,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               break;
         }
     }
-#endif /* DIRECTION_LAYER_ENABLE */
 
     switch (keycode) {
-#if !defined(NO_ACTION_ONESHOT) || defined(COMMUNITY_MODULE_AUTOMOUSE_ENABLE)
-        /* cancel OSM shift/auto mouse layer with BSPC */
-        case HRM_BSPC:
-            if (record->tap.count && record->event.pressed) {
-                if ((get_oneshot_mods() & MOD_MASK_SHIFT)) {
-                    del_oneshot_mods(MOD_MASK_SHIFT);
-                    return false;
-                }
-#ifdef COMMUNITY_MODULE_AUTOMOUSE_ENABLE
-                if (layer_state_is(EXT) && !is_layer_locked(EXT)) {
-                    // automouse_deactivate();
-                    layer_off(EXT);
-                    return false;
-                }
-#endif
-            }
-            break;
-#endif
-
         case ARROW:
           clear_mods();
           SEND_STRING((all_mods & MOD_MASK_CTRL) ?
@@ -842,7 +848,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           set_mods(mods);
           return false;
 
-#ifdef DIRECTION_LAYER_ENABLE
         case LBRC_A ... LBRC_Z:
           {
               const char buf[] = {'[', (keycode - LBRC_A) + 'a', '\0'};
@@ -860,7 +865,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
               return false;
           }
 
-#endif /* DIRECTION_LAYER_ENABLE */
         case UPDIR ... TMUXPAST:
           {
               const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
@@ -872,7 +876,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef COMMUNITY_MODULE_PALETTEFX_ENABLE
         case RGBHRND:
-          lighting_preset(RGB_MATRIX_CUSTOM_PALETTEFX_FLOW + (myrand() % 4), myrand());
+          lighting_preset(RGB_MATRIX_COMMUNITY_MODULE_PALETTEFX_FLOW +
+                  (myrand() % 4), myrand());
           return false;
 #endif /* COMMUNITY_MODULE_PALETTEFX_ENABLE */
     }

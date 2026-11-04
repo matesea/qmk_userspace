@@ -73,15 +73,14 @@
 #define FLOW_TAP_TERM 100
 // #define ACTION_DEBUG
 
-#define WHEEL_EXTENDED_SUPPORT
-// XXX: since importing navigator trackpad,
-//      high-resolution scroll causes scrolling extremely slow on windows platform
+// XXX: somehow hires scroll only works on MacOS
 // #define POINTING_DEVICE_HIRES_SCROLL_ENABLE
 // #ifdef POINTING_DEVICE_HIRES_SCROLL_EXPONENT
 //     #undef POINTING_DEVICE_HIRES_SCROLL_EXPONENT
 // #endif
 // #define POINTING_DEVICE_HIRES_SCROLL_EXPONENT 1
 // #define POINTING_DEVICE_GESTURES_CURSOR_GLIDE_ENABLE
+#define WHEEL_EXTENDED_SUPPORT
 #define MOUSE_EXTENDED_REPORT
 #define NAVIGATOR_SCROLL_DIVIDER 50
 
