@@ -300,7 +300,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
                      _______, _______, _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-                     XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______,
                      _______
@@ -540,8 +540,6 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
         break;
 
       case LBRC_A ... RBRC_Z:
-        *remembered_mods &= MOD_MASK_SHIFT;
-        break;
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
         break;
@@ -559,7 +557,7 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
                 return C(KC_TAB);
             return C(S(KC_TAB));
         }
-    } else {
+    } else if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
             /* reverse vim navigation */
             case LBRC_A ... LBRC_Z:
@@ -797,7 +795,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          break;
 
     case HRM_COMM:
-         add_mod_when_held(record, MOD_BIT_LALT);
+         add_mod_when_held(record, MOD_BIT_LSHIFT);
          break;
 
     case C(KC_A) ... C(KC_Z):
@@ -826,7 +824,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   if (record->event.pressed) {
     // opposite directional movement when shift pressed
-    if (all_mods & MOD_MASK_ALT) {
+    if (all_mods & MOD_MASK_SHIFT) {
         switch (keycode) {
           case RBRC_A ... RBRC_Z:
               keycode += LBRC_A - RBRC_A;
@@ -852,8 +850,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case LBRC_A ... LBRC_Z:
           {
-              const char buf[] = {'[', (keycode - LBRC_A) +
-                  ((all_mods & MOD_MASK_SHIFT) ? 'A': 'a'), '\0'};
+              const char buf[] = {'[', (keycode - LBRC_A) + 'a', '\0'};
               clear_mods();
               SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
               set_mods(mods);
@@ -861,8 +858,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
         case RBRC_A ... RBRC_Z:
           {
-              const char buf[] = {']', (keycode - RBRC_A) +
-                  ((all_mods & MOD_MASK_SHIFT) ? 'A': 'a'), '\0'};
+              const char buf[] = {']', (keycode - RBRC_A) + 'a', '\0'};
               clear_mods();
               SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
               set_mods(mods);
