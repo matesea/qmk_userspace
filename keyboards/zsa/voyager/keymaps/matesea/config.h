@@ -30,12 +30,12 @@
 
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
-// #define NO_ACTION_ONESHOT
+#define NO_ACTION_ONESHOT
 
 // Use Left Ctrl + Right Ctrl to activate the Command feature.
 #define IS_COMMAND() (get_mods() == MOD_MASK_CTRL)
 
-#define NO_ALT_REPEAT_KEY
+// #define NO_ALT_REPEAT_KEY
 
 #ifdef COMBO_ENABLE
 #define COMBO_TERM 50

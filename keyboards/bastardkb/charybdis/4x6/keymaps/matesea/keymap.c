@@ -36,16 +36,44 @@ enum custom_keycodes {
   CD,
   CF,
 
-  /* vim navigation */
-  /* the LBRC/RBRC keys must be both defined and in same order */
-  /* shift + RBRC_* = LBRC_* */
-  LBRC_A, // previous functon with aerial.nvim
-  LBRC_B, // previous buffer
-  LBRC_C, // previous hunk
-  LBRC_D, // previous diagnostics
+  /*
+     vim navigation
+     the LBRC/RBRC keys must be both defined and in same order
+   */
+  LBRC_a,
+  LBRC_b,
+  LBRC_c,
+  LBRC_d,
+  LBRC_e,
+  LBRC_f,
+  LBRC_g,
+  LBRC_h,
+  LBRC_i,
+  LBRC_j,
+  LBRC_k,
+  LBRC_l,
+  LBRC_m,
+  LBRC_n,
+  LBRC_o,
+  LBRC_p,
+  LBRC_q,
+  LBRC_r,
+  LBRC_s,
+  LBRC_t,
+  LBRC_u,
+  LBRC_v,
+  LBRC_w,
+  LBRC_x,
+  LBRC_y,
+  LBRC_z,
+
+  LBRC_A,
+  LBRC_B,
+  LBRC_C,
+  LBRC_D,
   LBRC_E,
-  LBRC_F, // jump to highlight under cursor backward
-  LBRC_G, // jump to any highlight backward
+  LBRC_F,
+  LBRC_G,
   LBRC_H,
   LBRC_I,
   LBRC_J,
@@ -55,16 +83,43 @@ enum custom_keycodes {
   LBRC_N,
   LBRC_O,
   LBRC_P,
-  LBRC_Q, // previous item in quickfix
+  LBRC_Q,
   LBRC_R,
   LBRC_S,
-  LBRC_T, // previous tab
+  LBRC_T,
   LBRC_U,
   LBRC_V,
   LBRC_W,
   LBRC_X,
   LBRC_Y,
   LBRC_Z,
+
+  RBRC_a,
+  RBRC_b,
+  RBRC_c,
+  RBRC_d,
+  RBRC_e,
+  RBRC_f,
+  RBRC_g,
+  RBRC_h,
+  RBRC_i,
+  RBRC_j,
+  RBRC_k,
+  RBRC_l,
+  RBRC_m,
+  RBRC_n,
+  RBRC_o,
+  RBRC_p,
+  RBRC_q,
+  RBRC_r,
+  RBRC_s,
+  RBRC_t,
+  RBRC_u,
+  RBRC_v,
+  RBRC_w,
+  RBRC_x,
+  RBRC_y,
+  RBRC_z,
 
   RBRC_A,
   RBRC_B,
@@ -180,17 +235,17 @@ bool process_detected_host_os_user(os_variant_t os) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
-            KC_ESC,  KC_1,  KC_2,  KC_3,   KC_4,    KC_5,
-            KC_TAB,  KC_Q,  KC_W,  KC_E,   KC_R,    KC_T,
-            KC_UNDS, HRM_A, HRM_S, HRM_D,  HRM_F,   HRM_G,
-            SWIME,   KC_Z,  KC_X,  KC_C,   KC_V,    KC_B,
-                                   QK_REP, OSM_SFT, HRM_ENT,
-                                           MS_BTN2, MS_BTN1,
+            KC_ESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,
+            KC_TAB,  KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,
+            KC_UNDS, HRM_A, HRM_S, HRM_D,   HRM_F,   HRM_G,
+            SWIME,   KC_Z,  KC_X,  KC_C,    KC_V,    KC_B,
+                                   OSM_SFT, HRM_ENT, QK_REP,
+                                            MS_BTN2, MS_BTN1,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
                         KC_H,     HRM_J, HRM_K,    HRM_L,   HRM_SCLN, KC_QUOT,
-                        KC_N,     KC_M, HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
+                        KC_N,     KC_M,  HRM_COMM, HRM_DOT, KC_SLSH,  KC_BSLS,
                         HRM_BSPC, KC_SPC,
                         QK_AREP
     ),
@@ -292,15 +347,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [DIR] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            XXXXXXX, RBRC_Q,  RBRC_W,  RBRC_E,  RBRC_R,  RBRC_T,
-            XXXXXXX, RBRC_A,  RBRC_S,  RBRC_D,  RBRC_F,  RBRC_G,
-            XXXXXXX, RBRC_Z,  RBRC_X,  RBRC_C,  RBRC_V,  RBRC_B,
+            XXXXXXX, RBRC_q,  RBRC_w,  RBRC_e,  RBRC_r,  RBRC_t,
+            XXXXXXX, RBRC_a,  RBRC_s,  RBRC_d,  RBRC_f,  RBRC_g,
+            XXXXXXX, RBRC_z,  RBRC_x,  RBRC_c,  RBRC_v,  RBRC_b,
                                        _______, XXXXXXX, _______,
                                                 _______, _______,
 
                      _______, _______, _______, _______, _______, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                     XXXXXXX, KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
                      _______, _______,
                      _______
@@ -539,7 +594,7 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
         }
         break;
 
-      case LBRC_A ... RBRC_Z:
+      case LBRC_a ... RBRC_Z:
       case KEYSTR_MIN ... KEYSTR_MAX: // forget all mods
         *remembered_mods = 0;
         break;
@@ -557,15 +612,20 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
                 return C(KC_TAB);
             return C(S(KC_TAB));
         }
-    } else if ((mods & ~MOD_MASK_SHIFT) == 0) {
-        switch (keycode) {
-            /* reverse vim navigation */
-            case LBRC_A ... LBRC_Z:
-                return keycode - LBRC_A + RBRC_A;
+    }
+    switch (keycode) {
+        /* reverse vim navigation */
+        case LBRC_A ... LBRC_Z:
+            return keycode - LBRC_A + RBRC_A;
 
-            case RBRC_A ... RBRC_Z:
-                return keycode - RBRC_A + LBRC_A;
-        }
+        case RBRC_A ... RBRC_Z:
+            return keycode - RBRC_A + LBRC_A;
+
+        case LBRC_a ... LBRC_z:
+            return keycode - LBRC_a + RBRC_a;
+
+        case RBRC_a ... RBRC_z:
+            return keycode - RBRC_a + LBRC_a;
     }
     return KC_TRNS;
 }
@@ -656,11 +716,16 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
+static void send_string_delay_mods(const char* buf, uint8_t mods, uint32_t delay) {
+    clear_mods();
+    SEND_STRING_DELAY(buf, delay);
+    set_mods(mods);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   const uint8_t mods = get_mods();
   const uint8_t all_mods = (mods | get_weak_mods());
-  const uint8_t alt_mods = all_mods & MOD_MASK_ALT;
   const uint8_t layer = read_source_layers_cache(record->event.key);
 
   dlog_record(keycode, record);
@@ -795,7 +860,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
          break;
 
     case HRM_COMM:
-         add_mod_when_held(record, MOD_BIT_LSHIFT);
+         add_mod_when_held(record, MOD_BIT_LALT);
          break;
 
     case C(KC_A) ... C(KC_Z):
@@ -823,54 +888,67 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   if (record->event.pressed) {
-    // opposite directional movement when shift pressed
-    if (all_mods & MOD_MASK_SHIFT) {
+      const bool shift = !!(all_mods & MOD_MASK_SHIFT);
+      const bool alt = !!(all_mods & MOD_MASK_ALT);
+      const bool ctrl = !!(all_mods & MOD_MASK_CTRL);
+
+#ifdef REPEAT_KEY_ENABLE
+      if (get_repeat_key_count() == 0) {
+#endif
         switch (keycode) {
-          case RBRC_A ... RBRC_Z:
-              keycode += LBRC_A - RBRC_A;
+          case RBRC_a ... RBRC_z:
+              if (alt && shift)
+                  keycode += LBRC_A - RBRC_a;
+              else if (alt)
+                  keycode += LBRC_a - RBRC_a;
+              else if (shift)
+                  keycode += RBRC_A - RBRC_a;
+              del_mods(MOD_MASK_SA);
 #ifdef REPEAT_KEY_ENABLE
               set_last_keycode(keycode);
 #endif
               break;
         }
-    }
+#ifdef REPEAT_KEY_ENABLE
+      }
+#endif
 
     switch (keycode) {
         case ARROW:
-          clear_mods();
-          SEND_STRING((all_mods & MOD_MASK_CTRL) ?
-                  (alt_mods ?
-                      "<=>" :
-                      "=>") :
-                  (alt_mods ?
-                      "<->" :
-                      "->"));
-          set_mods(mods);
+          send_string_delay_mods((ctrl) ?
+                  (alt ? "<=>" : "=>") :
+                  (alt ? "<->" : "->"), mods, 0);
           return false;
 
+        case LBRC_a ... LBRC_z:
+          {
+              const char buf[] = {'[', ((keycode - LBRC_a) + 'a'), '\0'};
+              send_string_delay_mods(buf, mods, TAP_CODE_DELAY);
+          }
+          return false;
+        case RBRC_a ... RBRC_z:
+          {
+              const char buf[] = {']', ((keycode - RBRC_a) + 'a'), '\0'};
+              send_string_delay_mods(buf, mods, TAP_CODE_DELAY);
+          }
+          return false;
         case LBRC_A ... LBRC_Z:
           {
-              const char buf[] = {'[', (keycode - LBRC_A) + 'a', '\0'};
-              clear_mods();
-              SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
-              set_mods(mods);
-              return false;
+              const char buf[] = {'[', ((keycode - LBRC_A) + 'A'), '\0'};
+              send_string_delay_mods(buf, mods, TAP_CODE_DELAY);
           }
+          return false;
         case RBRC_A ... RBRC_Z:
           {
-              const char buf[] = {']', (keycode - RBRC_A) + 'a', '\0'};
-              clear_mods();
-              SEND_STRING_DELAY(buf, TAP_CODE_DELAY);
-              set_mods(mods);
-              return false;
+              const char buf[] = {']', ((keycode - RBRC_A) + 'A'), '\0'};
+              send_string_delay_mods(buf, mods, TAP_CODE_DELAY);
           }
+          return false;
 
         case UPDIR ... TMUXPAST:
           {
               const struct keystring_t *p = &keystrings[keycode - KEYSTR_MIN];
-              clear_mods();
-              SEND_STRING_DELAY(p->str, TAP_CODE_DELAY);
-              set_mods(mods);
+              send_string_delay_mods(p->str, mods, TAP_CODE_DELAY);
           }
           return false;
 
