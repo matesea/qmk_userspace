@@ -156,7 +156,7 @@ enum keycode_aliases {
     HRM_A   = LGUI_T(KC_A),
     HRM_S   = LALT_T(KC_S),
     HRM_D   = LCTL_T(KC_D),
-    HRM_F   = LSFT_T(KC_F),
+    // HRM_F   = LSFT_T(KC_F),
 
     HRM_G   = LT(EXT, KC_G),
 
@@ -197,9 +197,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
             KC_ESC,  KC_1,  KC_2,  KC_3,  KC_4,    KC_5,
             KC_TAB,  KC_Q,  KC_W,  KC_E,  KC_R,    KC_T,
-            KC_UNDS, HRM_A, HRM_S, HRM_D, HRM_F,   HRM_G,
+            KC_UNDS, HRM_A, HRM_S, HRM_D, KC_F,    HRM_G,
             SWIME,   KC_Z,  KC_X,  KC_C,  KC_V,    KC_B,
-                                          QK_REP,  HRM_ENT,
+                                          OSM_SFT, HRM_ENT,
 
                         KC_6,     KC_7,  KC_8,     KC_9,    KC_0,     KC_EQL,
                         KC_Y,     KC_U,  KC_I,     KC_O,    KC_P,     KC_MINS,
@@ -286,15 +286,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            NV_TAIM, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
-            NV_TSCR, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
+            XXXXXXX, C(KC_Q), C(KC_W), C(KC_E), C(KC_R), C(KC_T),
+            CLOSAPP, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                                 XXXXXXX, KC_ENT,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
-                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, XXXXXXX,
-                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  XXXXXXX,
+                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
                      KC_BSPC,   KC_SPC
      ),
 
@@ -325,15 +325,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
     [EXT] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            NV_TAIM, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-            NV_TSCR, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
-            NV_VSCR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+            XXXXXXX, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,
+            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                                 MS_BTN2, MS_BTN1,
 
                      QK_RBT,  NV_CPID, NV_CPIU, NV_CSPD, QK_BOOT, QK_LLCK,
-                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  KC_BRK,
-                     LUMINO,  KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_PSCR,
-                     RGBHRND, KC_F1,   KC_F2,   KC_F3,   KC_F10,  KC_SCRL,
+                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  NV_TAIM,
+                     LUMINO,  KC_F4,   KC_F5,   KC_F6,   KC_F11,  NV_TSCR,
+                     RGBHRND, KC_F1,   KC_F2,   KC_F3,   KC_F10,  NV_VSCR,
                      KC_BSPC, KC_SPC
             ),
 
@@ -354,13 +354,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #if defined(COMBO_ENABLE)
 const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
-const uint16_t PROGMEM combo_fg[] = {HRM_F, HRM_G, COMBO_END};
 const uint16_t PROGMEM combo_hj[] = {KC_H, HRM_J, COMBO_END};
 const uint16_t PROGMEM combo_m_comm[] = {KC_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
-    // COMBO(combo_fg, TOGGLE_SCROLL), // NV_TSCR
 #if defined(REPEAT_KEY_ENABLE) && !defined(NO_ALT_REPEAT_KEY)
     COMBO(combo_hj, QK_AREP),
 #endif
@@ -371,8 +369,9 @@ combo_t key_combos[] = {
 #ifdef TAPPING_TERM_PER_KEY
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case HRM_F: case HRM_J:
-            return TAPPING_TERM - 70; /* 180ms */
+        // case HRM_F:
+        case HRM_J:
+            return TAPPING_TERM - 70; // 180ms
     }
     return TAPPING_TERM; /* 250ms */
 }
@@ -827,28 +826,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
 
-    case NAV_A:
-         if (process_tap(record, isMacOS ? G(KC_A) : C(KC_A)))
-             return false;
-         break;
-    case NAV_S:
-         if (process_tap(record, isMacOS ? G(KC_S) : C(KC_S)))
-             return false;
-         break;
-    case NAV_D:
-         if (process_tap(record, isMacOS ? G(KC_D) : C(KC_D)))
-             return false;
-         break;
-
-    case NAV_F:
-         if (process_tap(record, isMacOS ? G(KC_F) : C(KC_F)))
-             return false;
-         break;
-
     case HRM_COMM:
          add_mod_when_held(record, MOD_BIT_LALT);
          break;
 
+    // ctrl-<key> with single hand, mainly for tmux/vim
+    // convert ctrl-<key> shortcuts to gui-<key> on MacOS
+    case NAV_A:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_A) :
+                     C(KC_A)))
+             return false;
+         break;
+    case NAV_S:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_S) :
+                     C(KC_S)))
+             return false;
+         break;
+    case NAV_D:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_D) :
+                     C(KC_D)))
+             return false;
+         break;
+
+    case NAV_F:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_F) :
+                     C(KC_F)))
+             return false;
+         break;
+
+    /*
     case C(KC_A) ... C(KC_Z):
         // convert ctrl-<key> shortcuts to gui-<key> on MacOS
         if (isMacOS && record->event.pressed) {
@@ -857,6 +867,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
         break;
+    */
 
     /*
     case HRM_REP:

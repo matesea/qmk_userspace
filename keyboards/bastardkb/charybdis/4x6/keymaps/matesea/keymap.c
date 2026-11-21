@@ -173,7 +173,7 @@ enum keycode_aliases {
     HRM_A   = LGUI_T(KC_A),
     HRM_S   = LALT_T(KC_S),
     HRM_D   = LCTL_T(KC_D),
-    HRM_F   = LSFT_T(KC_F),
+    // HRM_F   = LSFT_T(KC_F),
 
     HRM_G   = LT(EXT, KC_G),
 
@@ -237,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [QWERTY] = LAYOUT_LR(
             KC_ESC,  KC_1,  KC_2,  KC_3,    KC_4,    KC_5,
             KC_TAB,  KC_Q,  KC_W,  KC_E,    KC_R,    KC_T,
-            KC_UNDS, HRM_A, HRM_S, HRM_D,   HRM_F,   HRM_G,
+            KC_UNDS, HRM_A, HRM_S, HRM_D,   KC_F,    HRM_G,
             SWIME,   KC_Z,  KC_X,  KC_C,    KC_V,    KC_B,
                                    OSM_SFT, HRM_ENT, QK_REP,
                                             MS_BTN2, MS_BTN1,
@@ -298,16 +298,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            SNP_TOG, CLOSAPP, C(KC_W), G(KC_E), G(KC_R), C(KC_T),
-            DRG_TOG, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
+            XXXXXXX, C(KC_Q), C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            CLOSAPP, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                        _______, XXXXXXX, KC_ENT,
                                                 _______, _______,
 
                      SELWBAK,   SELLINE, SELLUP,  SELWORD, XXXXXXX, QK_LLCK,
-                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  XXXXXXX,
-                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, XXXXXXX,
-                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  XXXXXXX,
+                     KC_HOME,   KC_PGDN, KC_PGUP, KC_END,  KC_INS,  KC_BRK,
+                     KC_LEFT,   KC_DOWN, KC_UP,   KC_RGHT, CW_TOGG, KC_PSCR,
+                     G(KC_TAB), APPPREV, APPNEXT, KC_APP,  KC_DEL,  KC_SCRL,
                      KC_BSPC,   KC_SPC,
                      _______
      ),
@@ -338,9 +338,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                 XXXXXXX, XXXXXXX,
 
                      QK_RBT,  XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT, QK_LLCK,
-                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  KC_BRK,
-                     XXXXXXX, KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_PSCR,
-                     XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F10,  KC_SCRL,
+                     DB_TOGG, KC_F7,   KC_F8,   KC_F9,   KC_F12,  SNP_TOG,
+                     XXXXXXX, KC_F4,   KC_F5,   KC_F6,   KC_F11,  DRG_TOG,
+                     XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F10,  XXXXXXX,
                      KC_BSPC, KC_SPC,
                      _______
             ),
@@ -406,16 +406,10 @@ void rgb_matrix_update_pwm_buffers(void);
 
 #if defined(COMBO_ENABLE)
 const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
-const uint16_t PROGMEM combo_fg[] = {HRM_F, HRM_G, COMBO_END};
-const uint16_t PROGMEM combo_hj[] = {KC_H, HRM_J, COMBO_END};
 const uint16_t PROGMEM combo_m_comm[] = {KC_M, HRM_COMM, COMBO_END};
 
 combo_t key_combos[] = {
     COMBO(combo_cv, CW_TOGG),
-    // COMBO(combo_fg, DRG_TOG),
-#if 0
-    COMBO(combo_hj, QK_AREP),
-#endif
     COMBO(combo_m_comm, SWIME),
 };
 #endif /* COMBO_ENABLE */
@@ -423,8 +417,9 @@ combo_t key_combos[] = {
 #ifdef TAPPING_TERM_PER_KEY
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case HRM_F: case HRM_J:
-            return TAPPING_TERM - 70; /* 180ms */
+        // case HRM_F:
+        case HRM_J:
+            return TAPPING_TERM - 70; // 180ms
     }
     return TAPPING_TERM; /* 250ms */
 }
@@ -489,7 +484,8 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
                  'R'    , 'R'    , 'R'    , 'R'    , 'R'    , 'R'    ,
                  'R'    , 'R'    , 'R'    , 'R'    , 'R'    , 'R'    ,
                  'R'    , 'R'    , 'R'    , 'R'    , 'R'    , 'R'    ,
-                 '*'    , '*'    , '*'
+                 '*'    , '*',
+                 '*'
 );
 
 bool get_chordal_hold(
@@ -841,28 +837,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
 
-    case NAV_A:
-         if (process_tap(record, isMacOS ? G(KC_A) : C(KC_A)))
-             return false;
-         break;
-    case NAV_S:
-         if (process_tap(record, isMacOS ? G(KC_S) : C(KC_S)))
-             return false;
-         break;
-    case NAV_D:
-         if (process_tap(record, isMacOS ? G(KC_D) : C(KC_D)))
-             return false;
-         break;
-
-    case NAV_F:
-         if (process_tap(record, isMacOS ? G(KC_F) : C(KC_F)))
-             return false;
-         break;
-
     case HRM_COMM:
          add_mod_when_held(record, MOD_BIT_LALT);
          break;
 
+    // ctrl-<key> with single hand, mainly for tmux/vim
+    // convert ctrl-<key> shortcuts to gui-<key> on MacOS
+    case NAV_A:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_A) :
+                     C(KC_A)))
+             return false;
+         break;
+    case NAV_S:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_S) :
+                     C(KC_S)))
+             return false;
+         break;
+    case NAV_D:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_D) :
+                     C(KC_D)))
+             return false;
+         break;
+
+    case NAV_F:
+         if (process_tap(record,
+                     // isMacOS ? G(KC_F) :
+                     C(KC_F)))
+             return false;
+         break;
+
+    /*
     case C(KC_A) ... C(KC_Z):
         // convert ctrl-<key> shortcuts to gui-<key> on MacOS
         if (isMacOS && record->event.pressed) {
@@ -871,6 +878,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
         break;
+    */
 
     /*
     case HRM_REP:
