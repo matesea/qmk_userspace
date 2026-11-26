@@ -298,7 +298,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // navigation layer
     [NAV] = LAYOUT_LR(
             _______, _______, _______, _______, _______, _______,
-            XXXXXXX, C(KC_Q), C(KC_W), G(KC_E), G(KC_R), C(KC_T),
+            XXXXXXX, C(KC_Q), C(KC_W), C(KC_E), C(KC_R), C(KC_T),
             CLOSAPP, NAV_A,   NAV_S,   NAV_D,   NAV_F,   C(KC_G),
             XXXXXXX, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),
                                        _______, XXXXXXX, KC_ENT,
@@ -741,26 +741,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         swapp_mod = 0;
     }
   }
-
-#ifndef NO_ACTION_ONESHOT
-  // automatically clear one-shot shift
-  if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
-      switch (get_tap_keycode(keycode)) {
-          case KC_A ... KC_0:
-          case KC_MINS ... KC_SLSH:
-              break;
-          case KC_BSPC:
-              // delete oneshot shift regardless of hold/tap
-              del_oneshot_mods(MOD_MASK_SHIFT);
-              // if this is tap key, stop further processing
-              if (record->tap.count)
-                  return false;
-              break;
-          default:
-              del_oneshot_mods(MOD_MASK_SHIFT);
-      }
-  }
-#endif
 
 #if 0
   // XXX: import from oryx

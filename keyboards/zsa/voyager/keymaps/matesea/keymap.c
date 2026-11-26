@@ -731,26 +731,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
   }
 
-#ifndef NO_ACTION_ONESHOT
-  // automatically clear one-shot shift
-  if ((get_oneshot_mods() & MOD_MASK_SHIFT) && record->event.pressed) {
-      switch (get_tap_keycode(keycode)) {
-          case KC_A ... KC_0:
-          case KC_MINS ... KC_SLSH:
-              break;
-          case KC_BSPC:
-              // delete oneshot shift regardless of hold/tap
-              del_oneshot_mods(MOD_MASK_SHIFT);
-              // if this is tap key, stop further processing
-              if (record->tap.count)
-                  return false;
-              break;
-          default:
-              del_oneshot_mods(MOD_MASK_SHIFT);
-      }
-  }
-#endif
-
 #if 0
   // XXX: import from oryx
   // no MT(mouse key) on my keymap
